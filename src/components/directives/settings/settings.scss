@@ -1,0 +1,49 @@
+[template=settings] {
+  .settings {
+    position: absolute;
+    top:50px;
+    bottom: 0px;
+    right: 0;
+    width: 300px;
+    background: white;
+    //background: $off-white;
+    border-left: $off-white 1px solid;
+    //background: darken($primary, 0%);
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    //border-radius: 3px;
+
+    padding: 15px;
+    transition: .2s;
+    transform: translateX(300px);
+
+    &.active {
+      transform: translateX(0);
+    }
+
+    .settings-title {
+      color: darken($primary, 20%);
+      line-height: 40px;
+      padding: 0 15px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .settings-item {
+      line-height: 40px;
+      padding: 0 15px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: 800;
+      background: $off-white;
+      transition: .2s;
+
+      &:hover {
+        background: darken($primary, 20%);
+        color: #fff;
+      }
+    }
+
+  }
+}

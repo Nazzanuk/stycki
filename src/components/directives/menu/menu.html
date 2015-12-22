@@ -1,0 +1,32 @@
+<script type="text/ng-template" id="menu.html">
+    <div template="menu">
+        <div class="menu">
+            <div class="menu-item" ui-sref="login" ng-class="{'active':isScreen('login')}">
+                <i class="fa fa-angle-right"></i> &nbsp;
+                Login
+            </div>
+            <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
+                <i class="fa fa-angle-right"></i> &nbsp;
+                My Walls
+            </div>
+            <div class="sub-menu-item"
+                 ui-sref="wall({id:wall._id, name:wall.name})"
+                 ng-repeat="wall in getWalls() track by wall._id"
+                 ng-class="{'active':isWall(wall.name)}"
+            >
+                <i class="fa fa-angle-right"></i> &nbsp;
+                #{{wall.name}}
+            </div>
+            <div class="menu-item">
+                <i class="fa fa-angle-right"></i> &nbsp;
+                Tutorial
+            </div>
+            <div class="menu-item">
+                <i class="fa fa-angle-right"></i> &nbsp;
+                Settings
+            </div>
+
+
+        </div>
+    </div>
+</script>

@@ -1,0 +1,108 @@
+$body: #000;
+
+$primary: #afe5fb;
+$secondary: #dce8af;
+$third: #f7e47e;
+$fourth: #f7c8c2;
+$off-white: #f7f7f7;
+$light-grey: #eee;
+$dark-grey: #333;
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  //font-family: "Raleway", sans-serif;
+  //font-family: 'Alegreya Sans', sans-serif;
+  font-family: 'Catamaran', sans-serif;
+  //font-family: 'Nexa', Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  font-smooth: always;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background: $off-white;
+
+  //div {
+  //  display: flex;
+  //}
+}
+
+[ui-view] {
+  flex: 1;
+  display: flex;
+}
+
+.view {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0 auto;
+  background: #f7f7f7;
+  position: relative;
+}
+
+[screen] {
+  flex: 1;
+  display: flex;
+
+  //transform: translateY(-30px);
+  margin-top: -30px;
+  opacity: 0;
+  transition: .2s;
+
+  &.active {
+    opacity: 1;
+    margin-top: 0;
+    //transform: translateY(0px);
+  }
+}
+
+[template] {
+  display: inherit;
+}
+
+.screens {
+  display: inherit;
+  flex: 1;
+}
+
+.fa {
+  display: inline-block;
+  line-height: inherit;
+}
+
+.butn {
+  //flex: 1;
+  width: 100%;
+  background: darken($primary, 20%);
+  //background: radial-gradient(ellipse at center, darken($primary, 25%) 50%, darken($primary, 10%) 100%);
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: white;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-weight: 800;
+  cursor: pointer;
+
+  &.secondary {
+    background: darken($secondary, 20%);
+    //background: radial-gradient(ellipse at center, darken($secondary, 25%) 50%, darken($secondary, 10%) 100%);
+  }
+
+  &.third {
+    background: darken($third, 20%);
+    //background: radial-gradient(ellipse at center, darken($third, 25%) 50%, darken($third, 10%) 100%);
+  }
+
+  &.fourth {
+    background: darken($fourth, 20%);
+    //background: radial-gradient(ellipse at center, darken($fourth, 25%) 50%, darken($fourth, 10%) 100%);
+  }
+}

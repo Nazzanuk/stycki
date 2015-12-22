@@ -1,0 +1,30 @@
+<script type="text/ng-template" id="wall.html">
+    <div template="wall">
+        <div class="wall">
+
+            <settings-item wall="wall" active="showSettings()"></settings-item>
+            <div class="wall-header">
+                #{{wall.name}}
+
+                <i class="wall-settings fa fa-cog pull-right" ng-click="toggleSettings()"></i>
+            </div>
+
+            <div class="wall-menu">
+                <div class="menu-item add-note" ng-click="addNote($event)"><i class="fa fa-plus"></i></div>
+                <div class="menu-item"><i class="fa fa-info"></i></div>
+            </div>
+
+            <div class="wall-canvas" ng-click="addNote($event)">
+                <note-item ng-repeat="note in getNotes() track by note._id"
+                           id="note._id"
+                           wall="note.wall"
+                           color="note.color"
+                           top="note.top"
+                           left="note.left"
+                           text="note.text"
+                ></note-item>
+            </div>
+
+        </div>
+    </div>
+</script>

@@ -1,0 +1,148 @@
+[template=note] {
+  .note {
+    color: $body;
+    padding: 0px;
+    //box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.2);
+    //box-shadow: 0 0px 15px 0px rgba(0, 0, 0, 0.05);
+    cursor: hand;
+    text-align: center;
+    position: absolute;
+    top: 100px;
+    left: 50px;
+    cursor: -webkit-grab;
+    cursor: grab;
+    width: 150px;
+    height: 125px;
+    transition: transform .2s, background .2s, opacity .2s, visibility .2s;
+    z-index: 10;
+    font-size: 12px;
+    opacity: 1;
+
+    &.ui-draggable-dragging {
+      transform: scale(1.1) rotate(6deg) !important;
+      cursor: -webkit-grab;
+      cursor: grab;
+    }
+
+    &.deleted {
+      //visibility: hidden;
+      transform: scale(0.4) rotate(500deg) !important;
+      opacity: 0;
+    }
+
+    &.rotate-1 {
+
+    }
+
+
+    .note-box {
+      position: relative;
+      width: 150px;
+      height: 125px;
+      background: $primary;
+      background: radial-gradient(ellipse at center, $primary 50%, darken($primary, 5%) 100%);
+
+      display: flex;
+      flex-direction: column;
+
+      &.color-2 {
+        background: #e1f09f;
+        background: radial-gradient(ellipse at center, #e1f09f 50%, darken(#e1f09f, 5%) 100%);
+      }
+
+      &.color-3 {
+        background: #f7e47e;
+        background: radial-gradient(ellipse at center, #f7e47e 50%, darken(#f7e47e, 5%) 100%);
+      }
+
+      &.color-4 {
+        background: #f7c8c2;
+        background: radial-gradient(ellipse at center, #f7c8c2 50%, darken(#f7c8c2, 5%) 100%);
+      }
+
+      &.color-5 {
+        background: #fff;
+        background: radial-gradient(ellipse at center, #fff 50%, darken(#fff, 5%) 100%);
+      }
+    }
+
+    .note-header {
+      flex: 0 0 auto;
+      height: 20px;
+      background: rgba(0, 0, 0, 0.03);
+
+      .header-icon {
+        cursor: pointer;
+        color: rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        line-height: 20px;
+        height: 20px;
+        width: 20px;
+        text-align: center;
+        font-size: 12px;
+        transition: .2s;
+      }
+    }
+
+    &:hover {
+      .note-header {
+        .header-icon {
+          opacity: 1;
+        }
+      }
+    }
+
+    .note-content {
+      flex: 1 1 auto;
+      outline: none;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      margin: 0 10px 10px;
+
+      .note-text {
+        cursor: text;
+        outline: none;
+        flex: 0 0 auto;
+        justify-content: center;
+        align-content: center;
+        align-self: center;
+        width: 100%;
+        min-height: 20px;
+        line-height: 20px;
+        font-family: 'Kalam', cursive;
+        font-size: 16px;
+        font-weight: 600;
+
+      }
+    }
+  }
+}
+
+.shadow
+{
+  position: relative;
+}
+.shadow:before, .shadow:after
+{
+  z-index: -1;
+  position: absolute;
+  content: "";
+  bottom: 15px;
+  left: 5px;
+  width: 50%;
+  top: 80%;
+  max-width:300px;
+  box-shadow: 0 15px 10px rgba(0, 0, 0, 0.2);
+  transform: rotate(-7deg);
+}
+.shadow:after
+{
+  transform: rotate(7deg);
+  right: 5px;
+  left: auto;
+}

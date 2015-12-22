@@ -1,0 +1,10 @@
+<script type="text/ng-template" id="wall-screen.html">
+    <div screen>
+        <div ng-if="!getWall()" style="padding-top: 30px;"><i class="fa fa-circle-o-notch fa-spin"></i> Loading</div>
+        <wall-item
+                ng-if="getWall()"
+                wall="getWall()"
+        ></wall-item>
+
+    </div>
+</script>

@@ -1,0 +1,88 @@
+[template=wall] {
+  display: flex;
+  flex: 1;
+  .wall {
+    flex: 1;
+    background: $light-grey;
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    margin: 30px;
+    position: relative;
+    overflow: hidden;
+
+
+    .wall-canvas {
+      position: absolute;
+      height: 2000px;
+      width: 2000px;
+      background: white;
+
+      overflow: hidden;
+      background-image: linear-gradient(90deg, #f7f7f7 2%, transparent 3%), linear-gradient(#f7f7f7 2%, transparent 3%);
+      background-size: 25px 25px;
+      cursor: cell;
+    }
+
+    .wall-header {
+      font-family: 'Kalam', cursive;
+      box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
+      background: darken($primary, 20%);
+      padding: 0 15px;
+      //background: radial-gradient(ellipse at center, #333 50%, darken(#333, 15%) 100%);
+      position: absolute;
+      z-index: 10000;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      //color: darken($primary, 25%);
+      color: white;
+      font-weight: 600;
+      font-size: 30px;
+      //border-left: 3px solid $primary;
+
+      .wall-settings {
+        cursor: pointer;
+        transition: .2s;
+
+        &:hover {
+          transform: rotate(360deg);
+        }
+      }
+    }
+
+    .wall-menu {
+      position: absolute;
+      z-index: 999;
+      left: 0;
+      bottom: 0;
+      text-align: center;
+
+      .menu-item {
+        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        margin: 15px;
+        background: $primary;
+        background: darken($primary, 20%);
+        color: white;
+        //background: radial-gradient(ellipse at center, $primary 50%, darken($primary, 5%) 100%);
+        border-radius: 100px;
+        cursor: pointer;
+        transition: .2s;
+
+        .fa {
+          pointer-events: none;
+        }
+
+        &:hover {
+          transform: scale(1.1);
+        }
+
+      }
+    }
+  }
+}

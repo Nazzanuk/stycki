@@ -1,0 +1,29 @@
+<script type="text/ng-template" id="note.html">
+    <div template="note">
+        <div class="note shadow" style="{{getRotation()}}" ng-style="getStyle()">
+            <div class="note-box color-{{color}}">
+                <div class="note-header">
+                    <div class="header-icon pull-left" ng-click="setColor()">
+                        <i class="fa fa-circle"></i>
+                    </div>
+
+                    <div class="header-icon pull-right" ng-click="removeNote()">
+                        <i class="fa fa-times"></i>
+                    </div>
+
+                </div>
+                <div class="note-content">
+                    <div class="note-text" contenteditable
+                         ng-keyup="updateText($event)"
+                         ng-blur="setText($event)"
+                         ng-bind="getText()"
+                    ></div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</script>

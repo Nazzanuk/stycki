@@ -1,0 +1,77 @@
+[template=dialog] {
+  .dialog {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.4);
+    z-index: 1000000;
+    transition: .2s;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    justify-items: center;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    visibility: hidden;
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .dialog-box {
+      box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+      overflow: hidden;
+      background: white;
+      padding: 20px 20px 0;
+      display: flex;
+      width: 500px;
+      flex-direction: column;
+      overflow: hidden;
+
+      .dialog-header {
+        flex: 1;
+        line-height: 50px;
+        position: relative;
+        z-index: 100;
+        padding: 0 20px;
+        font-weight: 300;
+        font-size: 20px;
+        background: $off-white;
+        //background: $primary;
+        //background: radial-gradient(ellipse at center, $primary 50%, darken($primary, 10%) 100%);
+        margin: -20px -20px 20px;
+        color: #333;
+        //color: darken($primary, 25%);
+
+        background: darken($primary, 25%);
+        background: radial-gradient(ellipse at center, darken($primary, 20%) 50%, darken($primary, 25%) 100%);
+        color: #fff;
+      }
+
+
+      .dialog-label {
+        //color: darken($primary, 20%);
+        //font-weight: 800;
+        margin-bottom: 10px;
+      }
+
+      .dialog-input {
+        background: $off-white;
+        line-height: 40px;
+        height: 40px;
+        margin-bottom: 20px;
+        padding: 0 20px;
+        border-radius: 4px;
+        width: 100%;
+        border: none;
+        font-weight: 300;
+        outline: none;
+      }
+    }
+
+  }
+}
