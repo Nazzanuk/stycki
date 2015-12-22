@@ -22,6 +22,7 @@ app.directive('dialogItem', (State, $state, Wall, Dialog) => ({
             isActive: Dialog.isActive,
             getPlaceholder: Dialog.getPlaceholder,
             content: Dialog.content,
+            closeDialog: Dialog.closeDialog,
             newDialog: Dialog.newDialog
         });
     }

@@ -60,6 +60,21 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
     //$locationProvider.html5Mode(true);
 });
+app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
+
+    var init = function init() {
+        $timeout(function () {
+            return $element.find('[screen]').addClass('active');
+        }, 50);
+    };
+
+    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        $(document).scrollTop(0);
+    });
+
+    init();
+});
+
 'use strict';
 
 app.factory('Alert', function ($timeout, $rootScope) {
@@ -366,21 +381,6 @@ app.factory('Wall', function (State, $rootScope) {
     };
 });
 
-app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
-
-    var init = function init() {
-        $timeout(function () {
-            return $element.find('[screen]').addClass('active');
-        }, 50);
-    };
-
-    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        $(document).scrollTop(0);
-    });
-
-    init();
-});
-
 app.directive('dialogItem', function (State, $state, Wall, Dialog) {
     return {
         templateUrl: 'dialog.html',
@@ -404,6 +404,7 @@ app.directive('dialogItem', function (State, $state, Wall, Dialog) {
                 isActive: Dialog.isActive,
                 getPlaceholder: Dialog.getPlaceholder,
                 content: Dialog.content,
+                closeDialog: Dialog.closeDialog,
                 newDialog: Dialog.newDialog
             });
         }
@@ -446,6 +447,48 @@ app.directive('headerItem', function (State, $state) {
                 },
                 toggleMenu: State.toggleMenu,
                 getTitle: State.getTitle
+            });
+        }
+    };
+});
+
+app.directive('menuItem', function (State, $state) {
+    return {
+        templateUrl: 'menu.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+            var walls;
+
+            var events = function events() {
+                socket.on('wall-list', function (data) {
+                    console.log(data);
+                    walls = data;
+                    scope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+                socket.emit('get-walls', {});
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                getWalls: function getWalls() {
+                    return walls;
+                },
+                getScreen: function getScreen() {
+                    return $state.current.name;
+                },
+                isScreen: function isScreen(screen) {
+                    return screen == $state.current.name;
+                },
+                isWall: function isWall(wall_id) {
+                    return wall_id == $state.params.id;
+                }
             });
         }
     };
@@ -582,48 +625,6 @@ app.directive('noteItem', function (State, $state, Wall) {
                 updateText: updateText,
                 getText: function getText() {
                     return text;
-                }
-            });
-        }
-    };
-});
-
-app.directive('menuItem', function (State, $state) {
-    return {
-        templateUrl: 'menu.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-            var walls;
-
-            var events = function events() {
-                socket.on('wall-list', function (data) {
-                    console.log(data);
-                    walls = data;
-                    scope.$apply();
-                });
-            };
-
-            var init = function init() {
-                events();
-                socket.emit('get-walls', {});
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                getWalls: function getWalls() {
-                    return walls;
-                },
-                getScreen: function getScreen() {
-                    return $state.current.name;
-                },
-                isScreen: function isScreen(screen) {
-                    return screen == $state.current.name;
-                },
-                isWall: function isWall(wall) {
-                    return wall == $state.params.name;
                 }
             });
         }

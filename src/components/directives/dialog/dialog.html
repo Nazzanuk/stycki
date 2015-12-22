@@ -2,7 +2,10 @@
     <div template="dialog">
         <div class="dialog" ng-class="{active:isActive()}" ng-click="closeDialog();">
             <div class="dialog-box" ng-click="$event.stopPropagation()">
-                <div class="dialog-header">{{getTitle()}}</div>
+                <div class="dialog-header">
+                    {{getTitle()}}
+                    <i class="fa fa-times pull-right" style="cursor: pointer" ng-click="closeDialog();"></i>
+                </div>
                 <div class="dialog-label">{{getMessage()}}</div>
                 <input class="dialog-input" placeholder="{{getPlaceholder()}}" ng-model="content.default"/>
                 <div class="butn" ng-click="submit(content.default)">Submit</div>

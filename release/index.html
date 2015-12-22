@@ -25,7 +25,7 @@
     <meta name="twitter:description" content="<%= ogDescription %>">
 
     <link rel="stylesheet" href="public/fonts/stylesheet.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <!--<link href='http://fonts.googleapis.com/css?family=Raleway:400,900,800,700,600,500,300,200,100&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
     <link href='https://fonts.googleapis.com/css?family=Catamaran:400,100,200,300,500,600,700,800,900' rel='stylesheet' type='text/css'>
     <!--<link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,700,400italic,300italic,700italic' rel='stylesheet' type='text/css'>-->
@@ -53,7 +53,10 @@
     <div template="dialog">
         <div class="dialog" ng-class="{active:isActive()}" ng-click="closeDialog();">
             <div class="dialog-box" ng-click="$event.stopPropagation()">
-                <div class="dialog-header">{{getTitle()}}</div>
+                <div class="dialog-header">
+                    {{getTitle()}}
+                    <i class="fa fa-times pull-right" style="cursor: pointer" ng-click="closeDialog();"></i>
+                </div>
                 <div class="dialog-label">{{getMessage()}}</div>
                 <input class="dialog-input" placeholder="{{getPlaceholder()}}" ng-model="content.default"/>
                 <div class="butn" ng-click="submit(content.default)">Submit</div>
@@ -66,6 +69,38 @@
     <div template="header">
         <div class="header">
             WLL.space
+
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="menu.html">
+    <div template="menu">
+        <div class="menu">
+            <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
+                <i class="fa fa-home fa-fw"></i> &nbsp;
+                My Walls
+            </div>
+            <div class="sub-menu-item"
+                 ui-sref="wall({id:wall._id, name:wall.name})"
+                 ng-repeat="wall in getWalls() track by wall._id"
+                 ng-class="{'active':isWall(wall._id)}"
+            >
+                <!--<i class="fa fa-star fa-fw"></i> &nbsp;-->
+                #{{wall.name}}
+            </div>
+            <div class="menu-item">
+                <i class="fa fa-info fa-fw"></i> &nbsp;
+                Tutorial
+            </div>
+            <div class="menu-item">
+                <i class="fa fa-cog fa-fw"></i> &nbsp;
+                Settings
+            </div>
+            <div class="menu-item" ui-sref="login" ng-class="{'active':isScreen('login')}">
+                <i class="fa fa-sign-out fa-fw"></i> &nbsp;
+                Logout
+            </div>
+
 
         </div>
     </div>
@@ -126,42 +161,12 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="menu.html">
-    <div template="menu">
-        <div class="menu">
-            <div class="menu-item" ui-sref="login" ng-class="{'active':isScreen('login')}">
-                <i class="fa fa-angle-right"></i> &nbsp;
-                Login
-            </div>
-            <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
-                <i class="fa fa-angle-right"></i> &nbsp;
-                My Walls
-            </div>
-            <div class="sub-menu-item"
-                 ui-sref="wall({id:wall._id, name:wall.name})"
-                 ng-repeat="wall in getWalls() track by wall._id"
-                 ng-class="{'active':isWall(wall.name)}"
-            >
-                <i class="fa fa-angle-right"></i> &nbsp;
-                #{{wall.name}}
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-angle-right"></i> &nbsp;
-                Tutorial
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-angle-right"></i> &nbsp;
-                Settings
-            </div>
-
-
-        </div>
-    </div>
-</script>
 <script type="text/ng-template" id="settings.html">
     <div template="settings">
         <div class="settings" ng-class="{active:active}">
-            <div class="settings-item" ng-click="getWallName()">#{{wall.name}}</div>
+            <!--<div class="settings-item" ng-click="getWallName()">#{{wall.name}}</div>-->
+            <div class="settings-item" ng-click="getWallName()"><i class="fa fa-pencil"></i> &nbsp; Change Name</div>
+            <!--<div class="settings-item" ng-click="getWallName()">Change Name</div>-->
 
         </div>
     </div>
@@ -199,7 +204,7 @@
 <script type="text/ng-template" id="wall-list.html">
     <div template="wall-list">
         <div style="width:200px;">
-            <div class="butn" ng-click="addWall()"><i class="fa fa-plus"></i> &nbsp; Add Wall</div>
+            <div class="butn primary-2" ng-click="addWall()"><i class="fa fa-plus"></i> &nbsp; Add Wall</div>
         </div>
 
         <div ng-if="getWalls().length == 0"><i class="fa fa-circle-o-notch fa-spin"></i> Loading...</div>

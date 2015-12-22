@@ -25,7 +25,7 @@ app.directive('menuItem', (State, $state) => ({
             getWalls:() => walls,
             getScreen:() => $state.current.name,
             isScreen:(screen) => screen == $state.current.name,
-            isWall:(wall) => wall == $state.params.name
+            isWall:(wall_id) => wall_id == $state.params.id
         });
     }
 }));

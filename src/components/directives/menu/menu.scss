@@ -38,6 +38,10 @@
     .sub-menu-item {
       @extend .menu-item;
       margin-left: 45px;
+
+      &.active {
+        //background: darken($primary-2, 20%);
+      }
     }
   }
 }

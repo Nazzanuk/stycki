@@ -1,6 +1,8 @@
 $body: #000;
 
-$primary: #afe5fb;
+$primary: #a9def3;
+$primary-2: #a4dfcc;
+$primary-3: #c3d9ac;
 $secondary: #dce8af;
 $third: #f7e47e;
 $fourth: #f7c8c2;
@@ -90,6 +92,10 @@ body {
   margin-bottom: 15px;
   font-weight: 800;
   cursor: pointer;
+
+  &.primary-2 {
+    background: darken($primary-2, 20%);
+  }
 
   &.secondary {
     background: darken($secondary, 20%);
