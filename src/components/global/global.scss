@@ -83,7 +83,8 @@ body {
   //flex: 1;
   width: 100%;
   background: darken($primary, 20%);
-  //background: radial-gradient(ellipse at center, darken($primary, 25%) 50%, darken($primary, 10%) 100%);
+  //background: radial-gradient(ellipse at center, $primary 50%, darken($primary, 10%) 100%);
+  background: radial-gradient(ellipse at center, darken($primary, 20%) 50%, darken($primary, 30%) 100%);
   height: 40px;
   line-height: 40px;
   text-align: center;
@@ -95,15 +96,23 @@ body {
 
   &.primary-2 {
     background: darken($primary-2, 20%);
+    background: radial-gradient(ellipse at center, darken($primary-2, 20%) 50%, darken($primary-2, 30%) 100%);
+  }
+
+  &.primary-3 {
+    background: darken($primary-3, 20%);
+    background: radial-gradient(ellipse at center, darken($primary-3, 20%) 50%, darken($primary-3, 30%) 100%);
   }
 
   &.secondary {
     background: darken($secondary, 20%);
+    background: radial-gradient(ellipse at center, darken($secondary, 20%) 50%, darken($secondary, 30%) 100%);
     //background: radial-gradient(ellipse at center, darken($secondary, 25%) 50%, darken($secondary, 10%) 100%);
   }
 
   &.third {
     background: darken($third, 20%);
+    background: radial-gradient(ellipse at center, darken($third, 20%) 50%, darken($third, 30%) 100%);
     //background: radial-gradient(ellipse at center, darken($third, 25%) 50%, darken($third, 10%) 100%);
   }
 

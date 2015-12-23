@@ -381,36 +381,6 @@ app.factory('Wall', function (State, $rootScope) {
     };
 });
 
-app.directive('dialogItem', function (State, $state, Wall, Dialog) {
-    return {
-        templateUrl: 'dialog.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var events = function events() {};
-
-            var init = function init() {
-                events();
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                getMessage: Dialog.getMessage,
-                getTitle: Dialog.getTitle,
-                submit: Dialog.submit,
-                isActive: Dialog.isActive,
-                getPlaceholder: Dialog.getPlaceholder,
-                content: Dialog.content,
-                closeDialog: Dialog.closeDialog,
-                newDialog: Dialog.newDialog
-            });
-        }
-    };
-});
-
 app.directive('headerItem', function (State, $state) {
     return {
         templateUrl: 'header.html',
@@ -452,43 +422,31 @@ app.directive('headerItem', function (State, $state) {
     };
 });
 
-app.directive('menuItem', function (State, $state) {
+app.directive('dialogItem', function (State, $state, Wall, Dialog) {
     return {
-        templateUrl: 'menu.html',
+        templateUrl: 'dialog.html',
         replace: true,
         scope: {},
 
         link: function link(scope, element, attrs) {
-            var walls;
 
-            var events = function events() {
-                socket.on('wall-list', function (data) {
-                    console.log(data);
-                    walls = data;
-                    scope.$apply();
-                });
-            };
+            var events = function events() {};
 
             var init = function init() {
                 events();
-                socket.emit('get-walls', {});
             };
 
             init();
 
             scope = _.extend(scope, {
-                getWalls: function getWalls() {
-                    return walls;
-                },
-                getScreen: function getScreen() {
-                    return $state.current.name;
-                },
-                isScreen: function isScreen(screen) {
-                    return screen == $state.current.name;
-                },
-                isWall: function isWall(wall_id) {
-                    return wall_id == $state.params.id;
-                }
+                getMessage: Dialog.getMessage,
+                getTitle: Dialog.getTitle,
+                submit: Dialog.submit,
+                isActive: Dialog.isActive,
+                getPlaceholder: Dialog.getPlaceholder,
+                content: Dialog.content,
+                closeDialog: Dialog.closeDialog,
+                newDialog: Dialog.newDialog
             });
         }
     };
@@ -507,6 +465,46 @@ app.directive('loginItem', function (State, $state, $timeout) {
             init();
 
             scope = _.extend(scope, {});
+        }
+    };
+});
+
+app.directive('settingsItem', function (State, $state, Wall, Dialog) {
+    return {
+        templateUrl: 'settings.html',
+        replace: true,
+        scope: {
+            wall: '=',
+            active: "="
+        },
+
+        link: function link(scope, element, attrs) {
+
+            var events = function events() {};
+
+            var getWallName = function getWallName() {
+                Dialog.newDialog({
+                    title: "Change Wall Name",
+                    message: "Wall names must be lowercase with dashes, no spaces.",
+                    placeholder: "wall-name",
+                    'default': scope.wall.name,
+                    callback: function callback(response) {
+                        scope.wall.name = response;
+                        socket.emit('save-wall', scope.wall);
+                    }
+                });
+            };
+
+            var init = function init() {
+                events();
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                newDialog: Dialog.newDialog,
+                getWallName: getWallName
+            });
         }
     };
 });
@@ -631,41 +629,43 @@ app.directive('noteItem', function (State, $state, Wall) {
     };
 });
 
-app.directive('settingsItem', function (State, $state, Wall, Dialog) {
+app.directive('menuItem', function (State, $state) {
     return {
-        templateUrl: 'settings.html',
+        templateUrl: 'menu.html',
         replace: true,
-        scope: {
-            wall: '=',
-            active: "="
-        },
+        scope: {},
 
         link: function link(scope, element, attrs) {
+            var walls;
 
-            var events = function events() {};
-
-            var getWallName = function getWallName() {
-                Dialog.newDialog({
-                    title: "Change Wall Name",
-                    message: "Wall names must be lowercase with dashes, no spaces.",
-                    placeholder: "wall-name",
-                    'default': scope.wall.name,
-                    callback: function callback(response) {
-                        scope.wall.name = response;
-                        socket.emit('save-wall', scope.wall);
-                    }
+            var events = function events() {
+                socket.on('wall-list', function (data) {
+                    console.log(data);
+                    walls = data;
+                    scope.$apply();
                 });
             };
 
             var init = function init() {
                 events();
+                socket.emit('get-walls', {});
             };
 
             init();
 
             scope = _.extend(scope, {
-                newDialog: Dialog.newDialog,
-                getWallName: getWallName
+                getWalls: function getWalls() {
+                    return walls;
+                },
+                getScreen: function getScreen() {
+                    return $state.current.name;
+                },
+                isScreen: function isScreen(screen) {
+                    return screen == $state.current.name;
+                },
+                isWall: function isWall(wall_id) {
+                    return wall_id == $state.params.id;
+                }
             });
         }
     };

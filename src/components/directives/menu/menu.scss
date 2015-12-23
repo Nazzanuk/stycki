@@ -31,6 +31,7 @@
         background: radial-gradient(ellipse at center, $primary 50%, darken($primary, 5%) 100%);
         font-weight: 800;
         background: darken($primary, 20%);
+        background: radial-gradient(ellipse at center, darken($primary, 20%) 50%, darken($primary, 30%) 100%);
         color: white;
       }
     }

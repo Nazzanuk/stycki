@@ -22,7 +22,7 @@
     }
 
     .dialog-box {
-      box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
+      box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
       border-radius: 4px;
       overflow: hidden;
       background: white;
@@ -47,8 +47,9 @@
         color: #333;
         //color: darken($primary, 25%);
 
-        background: darken($primary, 25%);
-        background: radial-gradient(ellipse at center, darken($primary, 20%) 50%, darken($primary, 25%) 100%);
+        background: darken($primary-3, 20%);
+        background: radial-gradient(ellipse at center, darken($primary-3, 20%) 50%, darken($primary-3, 30%) 100%);
+        //background: radial-gradient(ellipse at center, darken($primary, 20%) 50%, darken($primary, 25%) 100%);
         color: #fff;
       }
 

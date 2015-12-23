@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 
-    <!--<base href="/">-->
+    <base href="/">
 
     <!--<title><%= title %></title>-->
     <title>WLL.space | Simple and Beautiful Digital Walls</title>
@@ -49,6 +49,14 @@
 
     </div>
 </div>
+<script type="text/ng-template" id="header.html">
+    <div template="header">
+        <div class="header">
+            WLL.space
+
+        </div>
+    </div>
+</script>
 <script type="text/ng-template" id="dialog.html">
     <div template="dialog">
         <div class="dialog" ng-class="{active:isActive()}" ng-click="closeDialog();">
@@ -59,16 +67,74 @@
                 </div>
                 <div class="dialog-label">{{getMessage()}}</div>
                 <input class="dialog-input" placeholder="{{getPlaceholder()}}" ng-model="content.default"/>
-                <div class="butn" ng-click="submit(content.default)">Submit</div>
+                <div class="butn primary-3" ng-click="submit(content.default)">Submit</div>
             </div>
 
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="header.html">
-    <div template="header">
-        <div class="header">
-            WLL.space
+<script type="text/ng-template" id="login.html">
+    <div template="login">
+        <div class="login">
+            <div class="login-box">
+                <div class="login-header">WLL.space</div>
+
+                <div class="login-label">Email</div>
+                <input class="login-input" placeholder="Email"/>
+
+                <div class="login-label">Password</div>
+                <input type="password" class="login-input" placeholder="Password"/>
+
+                <p>Forgot your password</p>
+                <div class="login-hr"></div>
+                <div class="butn" ui-sref="home">Login</div>
+                <div class="login-hr"></div>
+                <div class="login-butns">
+                    <div class="butn secondary">Create Account</div>
+                    <div class="butn secondary">Learn More</div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="settings.html">
+    <div template="settings">
+        <div class="settings" ng-class="{active:active}">
+            <!--<div class="settings-item" ng-click="getWallName()">#{{wall.name}}</div>-->
+            <div class="settings-item" ng-click="getWallName()"><i class="fa fa-pencil"></i> &nbsp; Change Name</div>
+            <!--<div class="settings-item" ng-click="getWallName()">Change Name</div>-->
+
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="note.html">
+    <div template="note">
+        <div class="note shadow" style="{{getRotation()}}" ng-style="getStyle()">
+            <div class="note-box color-{{color}}">
+                <div class="note-header">
+                    <div class="header-icon pull-left" ng-click="setColor()">
+                        <i class="fa fa-circle"></i>
+                    </div>
+
+                    <div class="header-icon pull-right" ng-click="removeNote()">
+                        <i class="fa fa-times"></i>
+                    </div>
+
+                </div>
+                <div class="note-content">
+                    <div class="note-text" contenteditable
+                         ng-keyup="updateText($event)"
+                         ng-blur="setText($event)"
+                         ng-bind="getText()"
+                    ></div>
+                </div>
+            </div>
+
+
+
 
         </div>
     </div>
@@ -105,72 +171,6 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="login.html">
-    <div template="login">
-        <div class="login">
-            <div class="login-box">
-                <div class="login-header">WLL.space</div>
-
-                <div class="login-label">Email</div>
-                <input class="login-input" placeholder="Email"/>
-
-                <div class="login-label">Password</div>
-                <input type="password" class="login-input" placeholder="Password"/>
-
-                <p>Forgot your password</p>
-                <div class="login-hr"></div>
-                <div class="butn" ui-sref="home">Login</div>
-                <div class="login-hr"></div>
-                <div class="login-butns">
-                    <div class="butn secondary">Create Account</div>
-                    <div class="butn secondary">Learn More</div>
-                </div>
-            </div>
-
-
-
-        </div>
-    </div>
-</script>
-<script type="text/ng-template" id="note.html">
-    <div template="note">
-        <div class="note shadow" style="{{getRotation()}}" ng-style="getStyle()">
-            <div class="note-box color-{{color}}">
-                <div class="note-header">
-                    <div class="header-icon pull-left" ng-click="setColor()">
-                        <i class="fa fa-circle"></i>
-                    </div>
-
-                    <div class="header-icon pull-right" ng-click="removeNote()">
-                        <i class="fa fa-times"></i>
-                    </div>
-
-                </div>
-                <div class="note-content">
-                    <div class="note-text" contenteditable
-                         ng-keyup="updateText($event)"
-                         ng-blur="setText($event)"
-                         ng-bind="getText()"
-                    ></div>
-                </div>
-            </div>
-
-
-
-
-        </div>
-    </div>
-</script>
-<script type="text/ng-template" id="settings.html">
-    <div template="settings">
-        <div class="settings" ng-class="{active:active}">
-            <!--<div class="settings-item" ng-click="getWallName()">#{{wall.name}}</div>-->
-            <div class="settings-item" ng-click="getWallName()"><i class="fa fa-pencil"></i> &nbsp; Change Name</div>
-            <!--<div class="settings-item" ng-click="getWallName()">Change Name</div>-->
-
-        </div>
-    </div>
-</script>
 <script type="text/ng-template" id="wall.html">
     <div template="wall">
         <div class="wall">
@@ -203,7 +203,7 @@
 </script>
 <script type="text/ng-template" id="wall-list.html">
     <div template="wall-list">
-        <div style="width:200px;">
+        <div style="width:200px;margin-bottom: 20px;">
             <div class="butn primary-2" ng-click="addWall()"><i class="fa fa-plus"></i> &nbsp; Add Wall</div>
         </div>
 

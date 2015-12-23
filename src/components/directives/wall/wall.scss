@@ -26,7 +26,8 @@
     .wall-header {
       font-family: 'Kalam', cursive;
       box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
-      background: darken($primary-2, 20%);
+      background: darken($primary, 20%);
+      background: radial-gradient(ellipse at center, darken($primary, 20%) 50%, darken($primary, 30%) 100%);
       padding: 0 15px;
       //background: radial-gradient(ellipse at center, #333 50%, darken(#333, 15%) 100%);
       position: absolute;
