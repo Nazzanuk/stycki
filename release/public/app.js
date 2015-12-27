@@ -16,8 +16,8 @@ app.directive('ngEnter', function () {
     };
 });
 
-var server = 'http://localhost:5001';
-//var server ='https://nameless-beyond-9248.herokuapp.com';
+var server = window.location.host;
+//var server ='https://stycki.herokuapp.com:5001';
 
 var socket = io.connect(server);
 
@@ -26,39 +26,6 @@ socket.on('connect', function () {
 });
 socket.on('disconnect', function () {
     return console.log('disconnected!');
-});
-app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
-
-    var resolve = {
-        timeout: function timeout($timeout) {
-            $('[screen]').removeClass('active');
-            //$('.loading-logo').addClass('active');
-            return $timeout(300);
-        }
-    };
-
-    // For any unmatched url, redirect to /
-    $urlRouterProvider.otherwise("/");
-
-    // Now set up the states
-    $stateProvider.state('login', {
-        url: "/",
-        templateUrl: "login-screen.html",
-        controller: "LoginScreen",
-        resolve: resolve
-    }).state('home', {
-        url: "/home",
-        templateUrl: "home-screen.html",
-        controller: "HomeScreen",
-        resolve: resolve
-    }).state('wall', {
-        url: "/wall/:id/:name",
-        templateUrl: "wall-screen.html",
-        controller: "WallScreen",
-        resolve: resolve
-    });
-
-    //$locationProvider.html5Mode(true);
 });
 app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
 
@@ -364,14 +331,15 @@ app.factory('Wall', function (State, $rootScope) {
 
     var init = function init() {
         events();
+
+        socket.on('connect', function () {
+            if (wall._id == undefined) return;
+            console.log('rejoining...');
+            socket.emit('join-wall', wall._id);
+        });
     };
 
     init();
-
-    socket.on('connect', function () {
-        console.log('rejoining...');
-        socket.emit('join-wall', wall._id);
-    });
 
     return {
         addNote: addNote,
@@ -388,6 +356,39 @@ app.factory('Wall', function (State, $rootScope) {
     };
 });
 
+app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
+
+    var resolve = {
+        timeout: function timeout($timeout) {
+            $('[screen]').removeClass('active');
+            //$('.loading-logo').addClass('active');
+            return $timeout(300);
+        }
+    };
+
+    // For any unmatched url, redirect to /
+    $urlRouterProvider.otherwise("/");
+
+    // Now set up the states
+    $stateProvider.state('login', {
+        url: "/",
+        templateUrl: "login-screen.html",
+        controller: "LoginScreen",
+        resolve: resolve
+    }).state('home', {
+        url: "/home",
+        templateUrl: "home-screen.html",
+        controller: "HomeScreen",
+        resolve: resolve
+    }).state('wall', {
+        url: "/wall/:id/:name",
+        templateUrl: "wall-screen.html",
+        controller: "WallScreen",
+        resolve: resolve
+    });
+
+    //$locationProvider.html5Mode(true);
+});
 app.directive('dialogItem', function (State, $state, Wall, Dialog) {
     return {
         templateUrl: 'dialog.html',
@@ -414,6 +415,23 @@ app.directive('dialogItem', function (State, $state, Wall, Dialog) {
                 closeDialog: Dialog.closeDialog,
                 newDialog: Dialog.newDialog
             });
+        }
+    };
+});
+
+app.directive('loginItem', function (State, $state, $timeout) {
+    return {
+        templateUrl: 'login.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var init = function init() {};
+
+            init();
+
+            scope = _.extend(scope, {});
         }
     };
 });
@@ -497,23 +515,6 @@ app.directive('menuItem', function (State, $state) {
                     return wall_id == $state.params.id;
                 }
             });
-        }
-    };
-});
-
-app.directive('loginItem', function (State, $state, $timeout) {
-    return {
-        templateUrl: 'login.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var init = function init() {};
-
-            init();
-
-            scope = _.extend(scope, {});
         }
     };
 });
@@ -639,23 +640,6 @@ app.directive('noteItem', function (State, $state, Wall) {
     };
 });
 
-app.directive('registerItem', function (State, $state, $timeout) {
-    return {
-        templateUrl: 'register.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var init = function init() {};
-
-            init();
-
-            scope = _.extend(scope, {});
-        }
-    };
-});
-
 app.directive('settingsItem', function (State, $state, Wall, Dialog) {
     return {
         templateUrl: 'settings.html',
@@ -693,6 +677,23 @@ app.directive('settingsItem', function (State, $state, Wall, Dialog) {
                 newDialog: Dialog.newDialog,
                 getWallName: getWallName
             });
+        }
+    };
+});
+
+app.directive('registerItem', function (State, $state, $timeout) {
+    return {
+        templateUrl: 'register.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var init = function init() {};
+
+            init();
+
+            scope = _.extend(scope, {});
         }
     };
 });
@@ -784,6 +785,21 @@ app.directive('wallListItem', function (State, $state, Wall) {
     };
 });
 
+app.controller('HomeScreen', function ($element, $timeout, API, $scope) {
+
+    var content, tags, international, politics, religion, culture;
+
+    var init = function init() {
+        $timeout(function () {
+            return $element.find('[screen]').addClass('active');
+        }, 50);
+    };
+
+    init();
+
+    _.extend($scope, {});
+});
+
 app.controller('BootcampScreen', function ($element, $timeout, API, $scope, $state) {
 
     var content, tags, international, politics, religion, culture;
@@ -793,21 +809,6 @@ app.controller('BootcampScreen', function ($element, $timeout, API, $scope, $sta
             return $element.find('[screen]').addClass('active');
         }, 50);
         console.log('$state', $state);
-    };
-
-    init();
-
-    _.extend($scope, {});
-});
-
-app.controller('HomeScreen', function ($element, $timeout, API, $scope) {
-
-    var content, tags, international, politics, religion, culture;
-
-    var init = function init() {
-        $timeout(function () {
-            return $element.find('[screen]').addClass('active');
-        }, 50);
     };
 
     init();

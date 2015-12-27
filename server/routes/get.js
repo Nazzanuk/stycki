@@ -6,9 +6,9 @@ var MongoService = require('./../services/mongo-service');
 var request = require('request');
 
 var standardData = {
-    title: "ANDacademy",
+    title: "Stycki",
     ogTitle: "",
-    ogSiteName: "ANDacademy",
+    ogSiteName: "Stycki",
     ogUrl: "",
     ogImage: "",
     ogDescription: "",
@@ -34,6 +34,7 @@ module.exports = {
     },
 
     index(req, res) {
+        console.log('hello')
         //res.send('hello')
         res.render('index', standardData);
     },

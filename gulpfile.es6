@@ -39,8 +39,8 @@ gulp.task("gen-html", () =>
         ])
         .pipe(concat("index.ejs"))
         .pipe(gulp.dest('server/views'))
-        .pipe(concat("index.html"))
-        .pipe(gulp.dest('release'))
+        //.pipe(concat("index.html"))
+        //.pipe(gulp.dest('release'))
 );
 
 gulp.task('gen-js', () =>

@@ -8,17 +8,17 @@ module.exports = {
         io.on('connection', (socket) => {
             console.log('a user connected');
 
-            socket.on('join-wall', (wall) => {
-                console.log('join-wall', wall);
+            socket.on('join-wall', (wall_id) => {
+                console.log('join-wall', wall_id);
 
                 _.forEach(socket.rooms, (eachRoom, index) => {
                     console.log(eachRoom, index);
                     socket.leave(eachRoom);
                 });
 
-                socket.join(wall);
+                socket.join(wall_id);
 
-                Mongo.findDocuments('notes', {wall: wall}, {}, (notes) => io.to(wall).emit('notes', notes));
+                Mongo.findDocuments('notes', {wall: wall_id}, {}, (notes) => io.to(wall_id).emit('notes', notes));
             });
 
             socket.on('get-wall', (wall_id) => {

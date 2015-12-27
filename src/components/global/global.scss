@@ -66,13 +66,13 @@ h1, h2 {
   display: flex;
 
   //transform: translateY(-30px);
-  margin-top: -30px;
+  margin-left: -30px;
   opacity: 0;
   transition: .2s;
 
   &.active {
     opacity: 1;
-    margin-top: 0;
+    margin-left: 0;
     //transform: translateY(0px);
   }
 }

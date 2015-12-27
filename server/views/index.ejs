@@ -9,7 +9,7 @@
     <base href="/">
 
     <!--<title><%= title %></title>-->
-    <title>WLL.space | Simple and Beautiful Digital Walls</title>
+    <title>Stycki | Online Collaborative Sticky Board</title>
     <meta name="description" content="<%= ogDescription %>" />
 
     <meta property="og:title" content="<%= ogTitle %>" />
@@ -65,6 +65,33 @@
         </div>
     </div>
 </script>
+<script type="text/ng-template" id="login.html">
+    <div template="login">
+        <div class="login">
+            <div class="login-box">
+                <div class="login-header">WLL.space</div>
+
+                <div class="login-label">Email</div>
+                <input class="login-input" placeholder="Email"/>
+
+                <div class="login-label">Password</div>
+                <input type="password" class="login-input" placeholder="Password"/>
+
+                <p>Forgot your password?</p>
+                <div class="login-hr"></div>
+                <div class="butn" ui-sref="home">Login</div>
+                <div class="login-hr"></div>
+                <div class="login-butns">
+                    <div class="butn secondary">Create Account</div>
+                    <div class="butn secondary">Learn More</div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</script>
 <script type="text/ng-template" id="header.html">
     <div template="header">
         <div class="header">
@@ -105,33 +132,6 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="login.html">
-    <div template="login">
-        <div class="login">
-            <div class="login-box">
-                <div class="login-header">WLL.space</div>
-
-                <div class="login-label">Email</div>
-                <input class="login-input" placeholder="Email"/>
-
-                <div class="login-label">Password</div>
-                <input type="password" class="login-input" placeholder="Password"/>
-
-                <p>Forgot your password?</p>
-                <div class="login-hr"></div>
-                <div class="butn" ui-sref="home">Login</div>
-                <div class="login-hr"></div>
-                <div class="login-butns">
-                    <div class="butn secondary">Create Account</div>
-                    <div class="butn secondary">Learn More</div>
-                </div>
-            </div>
-
-
-
-        </div>
-    </div>
-</script>
 <script type="text/ng-template" id="note.html">
     <div template="note">
         <div class="note shadow deleted" style="{{getRotation()}}" ng-style="getStyle()">
@@ -161,6 +161,16 @@
         </div>
     </div>
 </script>
+<script type="text/ng-template" id="settings.html">
+    <div template="settings">
+        <div class="settings" ng-class="{active:active}">
+            <!--<div class="settings-item" ng-click="getWallName()">#{{wall.name}}</div>-->
+            <div class="settings-item" ng-click="getWallName()"><i class="fa fa-pencil"></i> &nbsp; Change Name</div>
+            <!--<div class="settings-item" ng-click="getWallName()">Change Name</div>-->
+
+        </div>
+    </div>
+</script>
 <script type="text/ng-template" id="register.html">
     <div template="register">
         <div class="register">
@@ -184,16 +194,6 @@
             </div>
 
 
-
-        </div>
-    </div>
-</script>
-<script type="text/ng-template" id="settings.html">
-    <div template="settings">
-        <div class="settings" ng-class="{active:active}">
-            <!--<div class="settings-item" ng-click="getWallName()">#{{wall.name}}</div>-->
-            <div class="settings-item" ng-click="getWallName()"><i class="fa fa-pencil"></i> &nbsp; Change Name</div>
-            <!--<div class="settings-item" ng-click="getWallName()">Change Name</div>-->
 
         </div>
     </div>
@@ -253,6 +253,12 @@
         </div>
     </div>
 </script>
+<script type="text/ng-template" id="home-screen.html">
+    <div screen>
+        <wall-list-item></wall-list-item>
+
+    </div>
+</script>
 <script type="text/ng-template" id="bootcamp-screen.html">
     <div screen style="background: #f7f7f7">
 
@@ -307,12 +313,6 @@
 
             </div>
         </div>
-
-    </div>
-</script>
-<script type="text/ng-template" id="home-screen.html">
-    <div screen>
-        <wall-list-item></wall-list-item>
 
     </div>
 </script>

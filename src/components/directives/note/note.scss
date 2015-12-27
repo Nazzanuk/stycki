@@ -55,18 +55,18 @@
 
       &.color-3 {
         background: lighten(#f7e47e, 10%);
-        //background: radial-gradient(ellipse at center, #f7e47e 50%, darken(#f7e47e, 5%) 100%);
+        background: radial-gradient(ellipse at center, lighten(#f7e47e, 10%) 50%, lighten(#f7e47e, 5%) 100%);
       }
 
       &.color-4 {
         background: #f7c8c2;
         background: lighten(#f7c8c2, 5%);
-        //background: radial-gradient(ellipse at center, #f7c8c2 50%, darken(#f7c8c2, 5%) 100%);
+        background: radial-gradient(ellipse at center, lighten(#f7c8c2, 5%) 50%, darken(#f7c8c2, 0%) 100%);
       }
 
       &.color-5 {
         background: #f7f7f7;
-        //background: radial-gradient(ellipse at center, #fff 50%, darken(#fff, 5%) 100%);
+        background: radial-gradient(ellipse at center, #fff 50%, darken(#fff, 5%) 100%);
       }
     }
 

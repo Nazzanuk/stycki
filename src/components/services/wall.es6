@@ -31,14 +31,15 @@ app.factory('Wall', (State, $rootScope) => {
 
     var init = () => {
         events();
+
+        socket.on('connect', () => {
+            if (wall._id == undefined) return;
+            console.log('rejoining...');
+            socket.emit('join-wall', wall._id);
+        });
     };
 
     init();
-
-    socket.on('connect', () => {
-        console.log('rejoining...');
-        socket.emit('join-wall', wall._id);
-    });
 
     return {
         addNote,

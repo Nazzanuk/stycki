@@ -10,8 +10,8 @@ app.directive('ngEnter', () => (scope, element, attrs) => {
 });
 
 
-var server = 'http://localhost:5001';
-//var server ='https://nameless-beyond-9248.herokuapp.com';
+var server =  window.location.host;
+//var server ='https://stycki.herokuapp.com:5001';
 
 var socket = io.connect(server);
 
