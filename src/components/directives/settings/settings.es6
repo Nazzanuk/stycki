@@ -19,8 +19,9 @@ app.directive('settingsItem', (State, $state, Wall, Dialog) => ({
                 placeholder: "wall-name",
                 default: scope.wall.name,
                 callback: (response) => {
-                    scope.wall.name = response;
+                    scope.wall.name = response.replace(/\s+/g, '-').toLowerCase();
                     socket.emit('save-wall', scope.wall);
+                    socket.emit('get-walls', {});
                 }
             })
         };

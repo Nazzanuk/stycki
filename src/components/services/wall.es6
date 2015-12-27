@@ -12,11 +12,13 @@ app.factory('Wall', (State, $rootScope) => {
             left = event.offsetX;
         }
 
+        notes.push({_id, color, top, left, wall: wall._id});
         socket.emit('add-note', {_id, color, top, left, wall: wall._id});
     };
 
     var setWall = (theWall) => {
         wall = theWall;
+        notes = [];
         socket.emit('join-wall', wall._id);
     };
 
@@ -32,6 +34,11 @@ app.factory('Wall', (State, $rootScope) => {
     };
 
     init();
+
+    socket.on('connect', () => {
+        console.log('rejoining...');
+        socket.emit('join-wall', wall._id);
+    });
 
     return {
         addNote,

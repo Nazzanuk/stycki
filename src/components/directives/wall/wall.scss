@@ -3,12 +3,13 @@
   flex: 1;
   .wall {
     flex: 1;
-    background: $light-grey;
+    background: #eee;
     box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
-    border-radius: 4px;
-    margin: 30px;
+    //border-radius: 4px;
+    margin: 15px;
     position: relative;
     overflow: hidden;
+    //border:3px solid darken($primary, 20%);
 
 
     .wall-canvas {
@@ -26,8 +27,10 @@
     .wall-header {
       font-family: 'Kalam', cursive;
       box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
-      background: darken($primary, 20%);
-      background: radial-gradient(ellipse at center, darken($primary, 20%) 50%, darken($primary, 30%) 100%);
+      background: darken($primary-2, 20%);
+      background: rgba(255,255,255,0.6);
+      //background: #f7f7f7;
+      //background: radial-gradient(ellipse at center, darken($primary, 20%) 50%, darken($primary, 30%) 100%);
       padding: 0 15px;
       //background: radial-gradient(ellipse at center, #333 50%, darken(#333, 15%) 100%);
       position: absolute;
@@ -38,12 +41,12 @@
       height: 50px;
       line-height: 50px;
       text-align: center;
-      //color: darken($primary, 25%);
-      color: white;
+      //color: darken($primary-2, 20%);
+      //color: white;
       font-weight: 600;
-      font-size: 30px;
+      font-size: 20px;
       //border-left: 3px solid $primary;
-      border-radius: 3px 3px 0 0;
+      //border-radius: 3px 3px 0 0;
 
       .wall-settings {
         cursor: pointer;
@@ -63,6 +66,7 @@
       text-align: center;
 
       .menu-item {
+        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
         box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
         width: 40px;
         height: 40px;

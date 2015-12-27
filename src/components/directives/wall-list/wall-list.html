@@ -1,16 +1,23 @@
 <script type="text/ng-template" id="wall-list.html">
     <div template="wall-list">
-        <div style="width:200px;margin-bottom: 20px;">
+        <div style="width:200px;">
             <div class="butn primary-2" ng-click="addWall()"><i class="fa fa-plus"></i> &nbsp; Add Wall</div>
         </div>
 
-        <div ng-if="getWalls().length == 0"><i class="fa fa-circle-o-notch fa-spin"></i> Loading...</div>
-        <div class="wall-list">
-            <div class="wall"
-                 ng-repeat="wall in getWalls() track by wall._id"
-                 ui-sref="wall({id:wall._id, name:wall.name})">
-                #{{wall.name}}
+        <div ng-if="getWalls().length == 0"><i class="fa fa-circle-o-notch fa-spin fa-2x"></i></div>
+        <div ng-if="getWalls().length != 0">
+
+            <h2>Public Walls</h2>
+
+            <div class="wall-list">
+                <div class="wall"
+                     ng-repeat="wall in getWalls() track by wall._id"
+                     ui-sref="wall({id:wall._id, name:wall.name})">
+                    #{{wall.name}}
+                </div>
             </div>
+
+            <!--<h2 style="padding: 15px 0;">Private Walls</h2>-->
         </div>
     </div>
 </script>

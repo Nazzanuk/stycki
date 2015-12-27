@@ -49,14 +49,6 @@
 
     </div>
 </div>
-<script type="text/ng-template" id="header.html">
-    <div template="header">
-        <div class="header">
-            WLL.space
-
-        </div>
-    </div>
-</script>
 <script type="text/ng-template" id="dialog.html">
     <div template="dialog">
         <div class="dialog" ng-class="{active:isActive()}" ng-click="closeDialog();">
@@ -67,8 +59,48 @@
                 </div>
                 <div class="dialog-label">{{getMessage()}}</div>
                 <input class="dialog-input" placeholder="{{getPlaceholder()}}" ng-model="content.default"/>
-                <div class="butn primary-3" ng-click="submit(content.default)">Submit</div>
+                <div class="butn primary" ng-click="submit(content.default)"> <i class="fa fa-check"></i> &nbsp; Submit</div>
             </div>
+
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="header.html">
+    <div template="header">
+        <div class="header">
+            Stycki
+
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="menu.html">
+    <div template="menu">
+        <div class="menu">
+            <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
+                <i class="fa fa-home fa-fw"></i> &nbsp;
+                My Walls
+            </div>
+            <div class="sub-menu-item"
+                 ui-sref="wall({id:wall._id, name:wall.name})"
+                 ng-repeat="wall in getWalls() track by wall._id"
+                 ng-class="{'active':isWall(wall._id)}"
+            >
+                <!--<i class="fa fa-star fa-fw"></i> &nbsp;-->
+                <i class="fa fa-star"></i> &nbsp; #{{wall.name}}
+            </div>
+            <div class="menu-item">
+                <i class="fa fa-info fa-fw"></i> &nbsp;
+                Tutorial
+            </div>
+            <div class="menu-item">
+                <i class="fa fa-cog fa-fw"></i> &nbsp;
+                Settings
+            </div>
+            <div class="menu-item" ui-sref="login" ng-class="{'active':isScreen('login')}">
+                <i class="fa fa-sign-out fa-fw"></i> &nbsp;
+                Logout
+            </div>
+
 
         </div>
     </div>
@@ -85,7 +117,7 @@
                 <div class="login-label">Password</div>
                 <input type="password" class="login-input" placeholder="Password"/>
 
-                <p>Forgot your password</p>
+                <p>Forgot your password?</p>
                 <div class="login-hr"></div>
                 <div class="butn" ui-sref="home">Login</div>
                 <div class="login-hr"></div>
@@ -100,19 +132,9 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="settings.html">
-    <div template="settings">
-        <div class="settings" ng-class="{active:active}">
-            <!--<div class="settings-item" ng-click="getWallName()">#{{wall.name}}</div>-->
-            <div class="settings-item" ng-click="getWallName()"><i class="fa fa-pencil"></i> &nbsp; Change Name</div>
-            <!--<div class="settings-item" ng-click="getWallName()">Change Name</div>-->
-
-        </div>
-    </div>
-</script>
 <script type="text/ng-template" id="note.html">
     <div template="note">
-        <div class="note shadow" style="{{getRotation()}}" ng-style="getStyle()">
+        <div class="note shadow deleted" style="{{getRotation()}}" ng-style="getStyle()">
             <div class="note-box color-{{color}}">
                 <div class="note-header">
                     <div class="header-icon pull-left" ng-click="setColor()">
@@ -139,34 +161,39 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="menu.html">
-    <div template="menu">
-        <div class="menu">
-            <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
-                <i class="fa fa-home fa-fw"></i> &nbsp;
-                My Walls
-            </div>
-            <div class="sub-menu-item"
-                 ui-sref="wall({id:wall._id, name:wall.name})"
-                 ng-repeat="wall in getWalls() track by wall._id"
-                 ng-class="{'active':isWall(wall._id)}"
-            >
-                <!--<i class="fa fa-star fa-fw"></i> &nbsp;-->
-                #{{wall.name}}
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-info fa-fw"></i> &nbsp;
-                Tutorial
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-cog fa-fw"></i> &nbsp;
-                Settings
-            </div>
-            <div class="menu-item" ui-sref="login" ng-class="{'active':isScreen('login')}">
-                <i class="fa fa-sign-out fa-fw"></i> &nbsp;
-                Logout
+<script type="text/ng-template" id="register.html">
+    <div template="register">
+        <div class="register">
+            <div class="register-box">
+                <div class="register-header">WLL.space</div>
+
+                <div class="register-label">Email</div>
+                <input class="register-input" placeholder="Email"/>
+
+                <div class="register-label">Password</div>
+                <input type="password" class="register-input" placeholder="Password"/>
+
+                <p>Forgot your password</p>
+                <div class="register-hr"></div>
+                <div class="butn" ui-sref="home">register</div>
+                <div class="register-hr"></div>
+                <div class="register-butns">
+                    <div class="butn secondary">Create Account</div>
+                    <div class="butn secondary">Learn More</div>
+                </div>
             </div>
 
+
+
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="settings.html">
+    <div template="settings">
+        <div class="settings" ng-class="{active:active}">
+            <!--<div class="settings-item" ng-click="getWallName()">#{{wall.name}}</div>-->
+            <div class="settings-item" ng-click="getWallName()"><i class="fa fa-pencil"></i> &nbsp; Change Name</div>
+            <!--<div class="settings-item" ng-click="getWallName()">Change Name</div>-->
 
         </div>
     </div>
@@ -177,6 +204,8 @@
 
             <settings-item wall="wall" active="showSettings()"></settings-item>
             <div class="wall-header">
+                <i class="fa fa-star pull-left" style="color: #e9b50b;cursor:pointer;" title="Favourite"></i>
+
                 #{{wall.name}}
 
                 <i class="wall-settings fa fa-cog pull-right" ng-click="toggleSettings()"></i>
@@ -203,17 +232,24 @@
 </script>
 <script type="text/ng-template" id="wall-list.html">
     <div template="wall-list">
-        <div style="width:200px;margin-bottom: 20px;">
+        <div style="width:200px;">
             <div class="butn primary-2" ng-click="addWall()"><i class="fa fa-plus"></i> &nbsp; Add Wall</div>
         </div>
 
-        <div ng-if="getWalls().length == 0"><i class="fa fa-circle-o-notch fa-spin"></i> Loading...</div>
-        <div class="wall-list">
-            <div class="wall"
-                 ng-repeat="wall in getWalls() track by wall._id"
-                 ui-sref="wall({id:wall._id, name:wall.name})">
-                #{{wall.name}}
+        <div ng-if="getWalls().length == 0"><i class="fa fa-circle-o-notch fa-spin fa-2x"></i></div>
+        <div ng-if="getWalls().length != 0">
+
+            <h2>Public Walls</h2>
+
+            <div class="wall-list">
+                <div class="wall"
+                     ng-repeat="wall in getWalls() track by wall._id"
+                     ui-sref="wall({id:wall._id, name:wall.name})">
+                    #{{wall.name}}
+                </div>
             </div>
+
+            <!--<h2 style="padding: 15px 0;">Private Walls</h2>-->
         </div>
     </div>
 </script>
@@ -283,6 +319,11 @@
 <script type="text/ng-template" id="login-screen.html">
     <div screen style="position: fixed;z-index: 2000000;">
         <login-item></login-item>
+    </div>
+</script>
+<script type="text/ng-template" id="register-screen.html">
+    <div screen style="position: fixed;z-index: 2000000;">
+        <register-item></register-item>
     </div>
 </script>
 <script type="text/ng-template" id="wall-screen.html">

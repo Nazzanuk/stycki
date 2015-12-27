@@ -39,8 +39,9 @@
       position: relative;
       width: 150px;
       height: 125px;
-      background: $primary;
-      background: radial-gradient(ellipse at center, $primary 50%, darken($primary, 5%) 100%);
+      background: lighten($primary-2, 10%);
+      background: radial-gradient(ellipse at center, lighten($primary-2, 15%) 50%, lighten($primary-2, 10%) 100%);
+      background: radial-gradient(ellipse at center, $primary-2 50%, darken($primary-2, 5%) 100%);
 
       display: flex;
       flex-direction: column;
@@ -48,21 +49,24 @@
       &.color-2 {
         background: #e1f09f;
         background: radial-gradient(ellipse at center, #e1f09f 50%, darken(#e1f09f, 5%) 100%);
+        background: lighten($primary, 10%);
+        background: radial-gradient(ellipse at center, $primary 50%, darken($primary, 5%) 100%);
       }
 
       &.color-3 {
-        background: #f7e47e;
-        background: radial-gradient(ellipse at center, #f7e47e 50%, darken(#f7e47e, 5%) 100%);
+        background: lighten(#f7e47e, 10%);
+        //background: radial-gradient(ellipse at center, #f7e47e 50%, darken(#f7e47e, 5%) 100%);
       }
 
       &.color-4 {
         background: #f7c8c2;
-        background: radial-gradient(ellipse at center, #f7c8c2 50%, darken(#f7c8c2, 5%) 100%);
+        background: lighten(#f7c8c2, 5%);
+        //background: radial-gradient(ellipse at center, #f7c8c2 50%, darken(#f7c8c2, 5%) 100%);
       }
 
       &.color-5 {
-        background: #fff;
-        background: radial-gradient(ellipse at center, #fff 50%, darken(#fff, 5%) 100%);
+        background: #f7f7f7;
+        //background: radial-gradient(ellipse at center, #fff 50%, darken(#fff, 5%) 100%);
       }
     }
 

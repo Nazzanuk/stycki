@@ -345,11 +345,13 @@ app.factory('Wall', function (State, $rootScope) {
             left = event.offsetX;
         }
 
+        notes.push({ _id: _id, color: color, top: top, left: left, wall: wall._id });
         socket.emit('add-note', { _id: _id, color: color, top: top, left: left, wall: wall._id });
     };
 
     var setWall = function setWall(theWall) {
         wall = theWall;
+        notes = [];
         socket.emit('join-wall', wall._id);
     };
 
@@ -366,6 +368,11 @@ app.factory('Wall', function (State, $rootScope) {
 
     init();
 
+    socket.on('connect', function () {
+        console.log('rejoining...');
+        socket.emit('join-wall', wall._id);
+    });
+
     return {
         addNote: addNote,
         setWall: setWall,
@@ -377,6 +384,36 @@ app.factory('Wall', function (State, $rootScope) {
         },
         getNotes: function getNotes() {
             return notes;
+        }
+    };
+});
+
+app.directive('dialogItem', function (State, $state, Wall, Dialog) {
+    return {
+        templateUrl: 'dialog.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var events = function events() {};
+
+            var init = function init() {
+                events();
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                getMessage: Dialog.getMessage,
+                getTitle: Dialog.getTitle,
+                submit: Dialog.submit,
+                isActive: Dialog.isActive,
+                getPlaceholder: Dialog.getPlaceholder,
+                content: Dialog.content,
+                closeDialog: Dialog.closeDialog,
+                newDialog: Dialog.newDialog
+            });
         }
     };
 });
@@ -422,31 +459,43 @@ app.directive('headerItem', function (State, $state) {
     };
 });
 
-app.directive('dialogItem', function (State, $state, Wall, Dialog) {
+app.directive('menuItem', function (State, $state) {
     return {
-        templateUrl: 'dialog.html',
+        templateUrl: 'menu.html',
         replace: true,
         scope: {},
 
         link: function link(scope, element, attrs) {
+            var walls;
 
-            var events = function events() {};
+            var events = function events() {
+                socket.on('wall-list', function (data) {
+                    console.log(data);
+                    walls = data;
+                    scope.$apply();
+                });
+            };
 
             var init = function init() {
                 events();
+                socket.emit('get-walls', {});
             };
 
             init();
 
             scope = _.extend(scope, {
-                getMessage: Dialog.getMessage,
-                getTitle: Dialog.getTitle,
-                submit: Dialog.submit,
-                isActive: Dialog.isActive,
-                getPlaceholder: Dialog.getPlaceholder,
-                content: Dialog.content,
-                closeDialog: Dialog.closeDialog,
-                newDialog: Dialog.newDialog
+                getWalls: function getWalls() {
+                    return walls;
+                },
+                getScreen: function getScreen() {
+                    return $state.current.name;
+                },
+                isScreen: function isScreen(screen) {
+                    return screen == $state.current.name;
+                },
+                isWall: function isWall(wall_id) {
+                    return wall_id == $state.params.id;
+                }
             });
         }
     };
@@ -465,46 +514,6 @@ app.directive('loginItem', function (State, $state, $timeout) {
             init();
 
             scope = _.extend(scope, {});
-        }
-    };
-});
-
-app.directive('settingsItem', function (State, $state, Wall, Dialog) {
-    return {
-        templateUrl: 'settings.html',
-        replace: true,
-        scope: {
-            wall: '=',
-            active: "="
-        },
-
-        link: function link(scope, element, attrs) {
-
-            var events = function events() {};
-
-            var getWallName = function getWallName() {
-                Dialog.newDialog({
-                    title: "Change Wall Name",
-                    message: "Wall names must be lowercase with dashes, no spaces.",
-                    placeholder: "wall-name",
-                    'default': scope.wall.name,
-                    callback: function callback(response) {
-                        scope.wall.name = response;
-                        socket.emit('save-wall', scope.wall);
-                    }
-                });
-            };
-
-            var init = function init() {
-                events();
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                newDialog: Dialog.newDialog,
-                getWallName: getWallName
-            });
         }
     };
 });
@@ -605,6 +614,7 @@ app.directive('noteItem', function (State, $state, Wall) {
                 });
 
                 element.find('.note-text').focus();
+                element.find('.note').removeClass('deleted');
             };
 
             init();
@@ -629,43 +639,59 @@ app.directive('noteItem', function (State, $state, Wall) {
     };
 });
 
-app.directive('menuItem', function (State, $state) {
+app.directive('registerItem', function (State, $state, $timeout) {
     return {
-        templateUrl: 'menu.html',
+        templateUrl: 'register.html',
         replace: true,
         scope: {},
 
         link: function link(scope, element, attrs) {
-            var walls;
 
-            var events = function events() {
-                socket.on('wall-list', function (data) {
-                    console.log(data);
-                    walls = data;
-                    scope.$apply();
+            var init = function init() {};
+
+            init();
+
+            scope = _.extend(scope, {});
+        }
+    };
+});
+
+app.directive('settingsItem', function (State, $state, Wall, Dialog) {
+    return {
+        templateUrl: 'settings.html',
+        replace: true,
+        scope: {
+            wall: '=',
+            active: "="
+        },
+
+        link: function link(scope, element, attrs) {
+
+            var events = function events() {};
+
+            var getWallName = function getWallName() {
+                Dialog.newDialog({
+                    title: "Change Wall Name",
+                    message: "Wall names must be lowercase with dashes, no spaces.",
+                    placeholder: "wall-name",
+                    'default': scope.wall.name,
+                    callback: function callback(response) {
+                        scope.wall.name = response.replace(/\s+/g, '-').toLowerCase();
+                        socket.emit('save-wall', scope.wall);
+                        socket.emit('get-walls', {});
+                    }
                 });
             };
 
             var init = function init() {
                 events();
-                socket.emit('get-walls', {});
             };
 
             init();
 
             scope = _.extend(scope, {
-                getWalls: function getWalls() {
-                    return walls;
-                },
-                getScreen: function getScreen() {
-                    return $state.current.name;
-                },
-                isScreen: function isScreen(screen) {
-                    return screen == $state.current.name;
-                },
-                isWall: function isWall(wall_id) {
-                    return wall_id == $state.params.id;
-                }
+                newDialog: Dialog.newDialog,
+                getWallName: getWallName
             });
         }
     };
@@ -790,6 +816,19 @@ app.controller('HomeScreen', function ($element, $timeout, API, $scope) {
 });
 
 app.controller('LoginScreen', function ($element, $timeout, API, $scope) {
+
+    var init = function init() {
+        $timeout(function () {
+            return $element.find('[screen]').addClass('active');
+        }, 50);
+    };
+
+    init();
+
+    _.extend($scope, {});
+});
+
+app.controller('RegisterScreen', function ($element, $timeout, API, $scope) {
 
     var init = function init() {
         $timeout(function () {

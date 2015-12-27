@@ -88,6 +88,7 @@ app.directive('noteItem', (State, $state, Wall) => ({
             });
 
             element.find('.note-text').focus();
+            element.find('.note').removeClass('deleted')
         };
 
         init();

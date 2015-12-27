@@ -1,22 +1,23 @@
 [template=wall-list] {
-  display:flex;
+  display: flex;
   flex: 1;
   flex-direction: column;
-  margin: 30px;
+  padding: 15px;
+  background: $off-white;
 
   .wall-list {
     flex-direction: row;
     flex-wrap: wrap;
-    display:flex;
+    display: flex;
     margin: -15px;
 
     .wall {
       display: flex;
       height: 200px;
       background: white;
-      border-radius: 3px;
+      //border-radius: 3px;
       padding: 20px;
-      margin: 15px;
+      margin: 15px 0 0 15px;
       box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
       width: 300px;
       cursor: pointer;
@@ -26,12 +27,17 @@
       font-size: 20px;
       font-weight: 600;
       transition: .2s;
+      //border:1px solid $light-grey;
+      border-top: 3px solid darken($primary-2, 20%);
+      //background: white;
+      //background: darken($primary-3, 20%);
+      //color: white;
       //background: radial-gradient(ellipse at center, darken(white, 20%) 50%, darken(white, 30%) 100%);
 
       &:hover {
-        transform: translateY(-5px);
-        background: darken($primary-3, 20%);
-        background: radial-gradient(ellipse at center, darken($primary-3, 20%) 50%, darken($primary-3, 30%) 100%);
+        //transform: scale(1.05);
+        background: darken($primary-2, 20%);
+        ////background: radial-gradient(ellipse at center, darken($primary, 20%) 50%, darken($primary, 30%) 100%);
         color: white;
       }
     }
