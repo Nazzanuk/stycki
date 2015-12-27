@@ -160,6 +160,26 @@ h1, h2 {
       font-weight: 800;
       outline: none; }
 
+[template=header] {
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-flex: 0 0 65px;
+      -ms-flex: 0 0 65px;
+          flex: 0 0 65px; }
+  [template=header] .header {
+    -webkit-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    line-height: 65px;
+    background: #4fafd4;
+    color: white;
+    position: relative;
+    z-index: 100;
+    padding: 0 30px;
+    font-weight: 300;
+    font-size: 26px; }
+
 [template=login] {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -249,26 +269,6 @@ h1, h2 {
         [template=login] .login .login-box .login-butns .butn:first-child {
           margin-right: 15px; }
 
-[template=header] {
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-flex: 0 0 65px;
-      -ms-flex: 0 0 65px;
-          flex: 0 0 65px; }
-  [template=header] .header {
-    -webkit-flex: 1;
-        -ms-flex: 1;
-            flex: 1;
-    line-height: 65px;
-    background: #4fafd4;
-    color: white;
-    position: relative;
-    z-index: 100;
-    padding: 0 30px;
-    font-weight: 300;
-    font-size: 26px; }
-
 [template=menu] .menu {
   -webkit-flex: 0 0 250px;
       -ms-flex: 0 0 250px;
@@ -323,8 +323,8 @@ h1, h2 {
     cursor: -webkit-grab;
     cursor: grab; }
   [template=note] .note.deleted {
-    -webkit-transform: scale(0.4) rotate(500deg) !important;
-            transform: scale(0.4) rotate(500deg) !important;
+    -webkit-transform: scale(1.1) translateY(-30px) !important;
+            transform: scale(1.1) translateY(-30px) !important;
     opacity: 0; }
   [template=note] .note .note-box {
     position: relative;
