@@ -27,6 +27,21 @@ socket.on('connect', function () {
 socket.on('disconnect', function () {
     return console.log('disconnected!');
 });
+app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
+
+    var init = function init() {
+        $timeout(function () {
+            return $element.find('[screen]').addClass('active');
+        }, 50);
+    };
+
+    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        $(document).scrollTop(0);
+    });
+
+    init();
+});
+
 app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
     var resolve = {
@@ -60,21 +75,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
     //$locationProvider.html5Mode(true);
 });
-app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
-
-    var init = function init() {
-        $timeout(function () {
-            return $element.find('[screen]').addClass('active');
-        }, 50);
-    };
-
-    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        $(document).scrollTop(0);
-    });
-
-    init();
-});
-
 'use strict';
 
 app.factory('Alert', function ($timeout, $rootScope) {
@@ -419,6 +419,64 @@ app.directive('dialogItem', function (State, $state, Wall, Dialog) {
     };
 });
 
+app.directive('headerItem', function (State, $state) {
+    return {
+        templateUrl: 'header.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var menuVisible = true,
+                currentscroll = 0;
+
+            var checkScroll = function checkScroll() {
+                menuVisible = $(window).scrollTop() <= currentscroll;
+                currentscroll = $(window).scrollTop();
+                scope.$digest();
+            };
+
+            var events = function events() {
+                $(window).on('scroll', checkScroll);
+            };
+
+            var init = function init() {
+                events();
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                isActive: function isActive(page) {
+                    return page == $state.current.name;
+                },
+                isMenuVisible: function isMenuVisible() {
+                    return menuVisible;
+                },
+                toggleMenu: State.toggleMenu,
+                getTitle: State.getTitle
+            });
+        }
+    };
+});
+
+app.directive('loginItem', function (State, $state, $timeout) {
+    return {
+        templateUrl: 'login.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var init = function init() {};
+
+            init();
+
+            scope = _.extend(scope, {});
+        }
+    };
+});
+
 app.directive('noteItem', function (State, $state, Wall) {
     return {
         templateUrl: 'note.html',
@@ -540,23 +598,6 @@ app.directive('noteItem', function (State, $state, Wall) {
     };
 });
 
-app.directive('loginItem', function (State, $state, $timeout) {
-    return {
-        templateUrl: 'login.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var init = function init() {};
-
-            init();
-
-            scope = _.extend(scope, {});
-        }
-    };
-});
-
 app.directive('menuItem', function (State, $state) {
     return {
         templateUrl: 'menu.html',
@@ -606,47 +647,6 @@ app.directive('menuItem', function (State, $state) {
     };
 });
 
-app.directive('headerItem', function (State, $state) {
-    return {
-        templateUrl: 'header.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var menuVisible = true,
-                currentscroll = 0;
-
-            var checkScroll = function checkScroll() {
-                menuVisible = $(window).scrollTop() <= currentscroll;
-                currentscroll = $(window).scrollTop();
-                scope.$digest();
-            };
-
-            var events = function events() {
-                $(window).on('scroll', checkScroll);
-            };
-
-            var init = function init() {
-                events();
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                isActive: function isActive(page) {
-                    return page == $state.current.name;
-                },
-                isMenuVisible: function isMenuVisible() {
-                    return menuVisible;
-                },
-                toggleMenu: State.toggleMenu,
-                getTitle: State.getTitle
-            });
-        }
-    };
-});
-
 app.directive('registerItem', function (State, $state, $timeout) {
     return {
         templateUrl: 'register.html',
@@ -660,51 +660,6 @@ app.directive('registerItem', function (State, $state, $timeout) {
             init();
 
             scope = _.extend(scope, {});
-        }
-    };
-});
-
-app.directive('wallItem', function (State, $state, Wall, $timeout) {
-    return {
-        templateUrl: 'wall.html',
-        replace: true,
-        scope: {
-            wall: "="
-        },
-
-        link: function link(scope, element, attrs) {
-            var $canvas = element.find('.wall-canvas');
-
-            var settingsActive = false;
-
-            var init = function init() {
-                $canvas.draggable({
-                    cancel: ".note",
-                    start: function start(event, ui) {
-                        return $canvas.addClass('dragged');
-                    },
-                    stop: function stop(event, ui) {
-                        return $timeout(function () {
-                            return $canvas.removeClass('dragged');
-                        }, 1);
-                    }
-                });
-
-                Wall.setWall(scope.wall);
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                showSettings: function showSettings() {
-                    return settingsActive;
-                },
-                toggleSettings: function toggleSettings() {
-                    return settingsActive = !settingsActive;
-                },
-                addNote: Wall.addNote,
-                getNotes: Wall.getNotes
-            });
         }
     };
 });
@@ -762,6 +717,51 @@ app.directive('settingsItem', function (State, $state, Wall, Dialog) {
                 newDialog: Dialog.newDialog,
                 getWallName: getWallName,
                 removeWall: removeWall
+            });
+        }
+    };
+});
+
+app.directive('wallItem', function (State, $state, Wall, $timeout) {
+    return {
+        templateUrl: 'wall.html',
+        replace: true,
+        scope: {
+            wall: "="
+        },
+
+        link: function link(scope, element, attrs) {
+            var $canvas = element.find('.wall-canvas');
+
+            var settingsActive = false;
+
+            var init = function init() {
+                $canvas.draggable({
+                    cancel: ".note",
+                    start: function start(event, ui) {
+                        return $canvas.addClass('dragged');
+                    },
+                    stop: function stop(event, ui) {
+                        return $timeout(function () {
+                            return $canvas.removeClass('dragged');
+                        }, 1);
+                    }
+                });
+
+                Wall.setWall(scope.wall);
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                showSettings: function showSettings() {
+                    return settingsActive;
+                },
+                toggleSettings: function toggleSettings() {
+                    return settingsActive = !settingsActive;
+                },
+                addNote: Wall.addNote,
+                getNotes: Wall.getNotes
             });
         }
     };

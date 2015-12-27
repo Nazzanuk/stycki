@@ -160,6 +160,126 @@ h1, h2 {
       font-weight: 800;
       outline: none; }
 
+[template=header] {
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-flex: 0 0 65px;
+      -ms-flex: 0 0 65px;
+          flex: 0 0 65px; }
+  [template=header] .header {
+    -webkit-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    line-height: 65px;
+    background: #4fafd4;
+    color: white;
+    position: relative;
+    z-index: 100;
+    padding: 0 30px;
+    font-weight: 300;
+    font-size: 26px; }
+
+[template=login] {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #a1d4e8;
+  background: radial-gradient(ellipse at center, #afe5ce 0%, #2a88ac 100%);
+  position: fixed;
+  z-index: 2000000; }
+  [template=login] .login-title {
+    position: absolute;
+    text-align: center;
+    font-size: 60px;
+    top: 50%;
+    font-weight: 100;
+    color: white;
+    width: 500px;
+    line-height: 1;
+    margin-top: -350px; }
+  [template=login] .login {
+    -webkit-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-align-content: center;
+        -ms-flex-line-pack: center;
+            align-content: center; }
+    [template=login] .login .login-box {
+      box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      background: white;
+      padding: 15px 15px 0;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      width: 500px;
+      -webkit-flex-direction: column;
+          -ms-flex-direction: column;
+              flex-direction: column;
+      overflow: hidden; }
+      [template=login] .login .login-box .login-header {
+        -webkit-flex: 1;
+            -ms-flex: 1;
+                flex: 1;
+        line-height: 50px;
+        position: relative;
+        z-index: 100;
+        padding: 0 15px;
+        font-weight: 300;
+        font-size: 20px;
+        background: #f7f7f7;
+        margin: -15px -15px 15px;
+        color: #333;
+        background: #4fafd4;
+        color: #fff; }
+      [template=login] .login .login-box .login-label {
+        font-weight: 800;
+        margin-bottom: 15px; }
+      [template=login] .login .login-box .login-input {
+        background: #f7f7f7;
+        line-height: 40px;
+        height: 40px;
+        margin-bottom: 15px;
+        padding: 0 15px;
+        border-radius: 0px;
+        width: 100%;
+        border: none;
+        font-weight: 800;
+        outline: none;
+        border-left: 3px solid #4fafd4; }
+      [template=login] .login .login-box .login-hr {
+        height: 1px;
+        background: #eee;
+        margin: 7.5px 0px 22.5px; }
+      [template=login] .login .login-box .login-butns {
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-direction: row;
+            -ms-flex-direction: row;
+                flex-direction: row; }
+        [template=login] .login .login-box .login-butns .butn:first-child {
+          margin-right: 15px; }
+
 [template=note] .note {
   color: #000;
   padding: 0px;
@@ -298,106 +418,6 @@ h1, h2 {
   right: 5px;
   left: auto; }
 
-[template=login] {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #a1d4e8;
-  background: radial-gradient(ellipse at center, #afe5ce 0%, #2a88ac 100%);
-  position: fixed;
-  z-index: 2000000; }
-  [template=login] .login-title {
-    position: absolute;
-    text-align: center;
-    font-size: 60px;
-    top: 50%;
-    font-weight: 100;
-    color: white;
-    width: 500px;
-    line-height: 1;
-    margin-top: -350px; }
-  [template=login] .login {
-    -webkit-flex: 1;
-        -ms-flex: 1;
-            flex: 1;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    position: relative;
-    overflow: hidden;
-    -webkit-align-items: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-justify-content: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    -webkit-align-content: center;
-        -ms-flex-line-pack: center;
-            align-content: center; }
-    [template=login] .login .login-box {
-      box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
-      overflow: hidden;
-      background: white;
-      padding: 15px 15px 0;
-      display: -webkit-flex;
-      display: -ms-flexbox;
-      display: flex;
-      width: 500px;
-      -webkit-flex-direction: column;
-          -ms-flex-direction: column;
-              flex-direction: column;
-      overflow: hidden; }
-      [template=login] .login .login-box .login-header {
-        -webkit-flex: 1;
-            -ms-flex: 1;
-                flex: 1;
-        line-height: 50px;
-        position: relative;
-        z-index: 100;
-        padding: 0 15px;
-        font-weight: 300;
-        font-size: 20px;
-        background: #f7f7f7;
-        margin: -15px -15px 15px;
-        color: #333;
-        background: #4fafd4;
-        color: #fff; }
-      [template=login] .login .login-box .login-label {
-        font-weight: 800;
-        margin-bottom: 15px; }
-      [template=login] .login .login-box .login-input {
-        background: #f7f7f7;
-        line-height: 40px;
-        height: 40px;
-        margin-bottom: 15px;
-        padding: 0 15px;
-        border-radius: 0px;
-        width: 100%;
-        border: none;
-        font-weight: 800;
-        outline: none;
-        border-left: 3px solid #4fafd4; }
-      [template=login] .login .login-box .login-hr {
-        height: 1px;
-        background: #eee;
-        margin: 7.5px 0px 22.5px; }
-      [template=login] .login .login-box .login-butns {
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-flex-direction: row;
-            -ms-flex-direction: row;
-                flex-direction: row; }
-        [template=login] .login .login-box .login-butns .butn:first-child {
-          margin-right: 15px; }
-
 [template=menu] .menu {
   -webkit-flex: 0 0 250px;
       -ms-flex: 0 0 250px;
@@ -449,26 +469,6 @@ h1, h2 {
     margin-left: 15px; }
     [template=menu] .menu .sub-menu-item.active {
       background: #4fafd4; }
-
-[template=header] {
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-flex: 0 0 65px;
-      -ms-flex: 0 0 65px;
-          flex: 0 0 65px; }
-  [template=header] .header {
-    -webkit-flex: 1;
-        -ms-flex: 1;
-            flex: 1;
-    line-height: 65px;
-    background: #4fafd4;
-    color: white;
-    position: relative;
-    z-index: 100;
-    padding: 0 30px;
-    font-weight: 300;
-    font-size: 26px; }
 
 [template=register] {
   display: -webkit-flex;
@@ -561,6 +561,42 @@ h1, h2 {
         [template=register] .register .register-box .register-butns .butn:first-child {
           margin-right: 20px; }
 
+[template=settings] .settings {
+  position: absolute;
+  top: 50px;
+  bottom: 0px;
+  right: 0;
+  width: 300px;
+  background: white;
+  background: rgba(238, 238, 238, 0.8);
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  padding: 15px;
+  transition: .2s;
+  -webkit-transform: translateX(300px);
+          transform: translateX(300px); }
+  [template=settings] .settings.active {
+    -webkit-transform: translateX(0);
+            transform: translateX(0); }
+  [template=settings] .settings .settings-title {
+    color: #62cc9f;
+    line-height: 40px;
+    padding: 0 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 800; }
+  [template=settings] .settings .settings-item {
+    line-height: 40px;
+    padding: 0 15px;
+    cursor: pointer;
+    font-weight: 800;
+    background: white;
+    transition: .2s;
+    margin-bottom: 10px; }
+    [template=settings] .settings .settings-item:hover {
+      background: #62cc9f;
+      color: #fff; }
+
 [template=wall] {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -632,42 +668,6 @@ h1, h2 {
         [template=wall] .wall .wall-menu .menu-item:hover, [template=wall] .wall .wall-menu [template=menu] .menu .sub-menu-item:hover, [template=menu] .menu [template=wall] .wall .wall-menu .sub-menu-item:hover {
           -webkit-transform: scale(1.1);
                   transform: scale(1.1); }
-
-[template=settings] .settings {
-  position: absolute;
-  top: 50px;
-  bottom: 0px;
-  right: 0;
-  width: 300px;
-  background: white;
-  background: rgba(238, 238, 238, 0.8);
-  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
-  z-index: 1000;
-  padding: 15px;
-  transition: .2s;
-  -webkit-transform: translateX(300px);
-          transform: translateX(300px); }
-  [template=settings] .settings.active {
-    -webkit-transform: translateX(0);
-            transform: translateX(0); }
-  [template=settings] .settings .settings-title {
-    color: #62cc9f;
-    line-height: 40px;
-    padding: 0 15px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-weight: 800; }
-  [template=settings] .settings .settings-item {
-    line-height: 40px;
-    padding: 0 15px;
-    cursor: pointer;
-    font-weight: 800;
-    background: white;
-    transition: .2s;
-    margin-bottom: 10px; }
-    [template=settings] .settings .settings-item:hover {
-      background: #62cc9f;
-      color: #fff; }
 
 [template=wall-list] {
   display: -webkit-flex;
