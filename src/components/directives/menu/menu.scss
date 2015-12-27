@@ -9,6 +9,38 @@
     z-index: 100000;
     padding: 15px;
     background: $light-grey;
+    transition: .2s;
+    overflow: hidden;
+
+    .shrink-button {
+      position: absolute;
+      bottom: 15px;
+      height: 30px;
+      width: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: .2s;
+
+      .fa {
+        transition: .2s;
+      }
+    }
+
+    &.shrink {
+      width: 60px;
+      flex: 0 0 60px;
+
+      .shrink-button {
+        .fa {
+          transform: rotate(180deg);
+        }
+      }
+
+
+      .menu-item {
+        opacity: 0;
+      }
+    }
 
     .menu-item {
       height: 40px;

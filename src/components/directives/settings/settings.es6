@@ -26,6 +26,22 @@ app.directive('settingsItem', (State, $state, Wall, Dialog) => ({
             })
         };
 
+        var removeWall = () => {
+            Dialog.newDialog({
+                title: "Delete Wall",
+                message: "Type 'delete' to remove this wall.",
+                placeholder: "",
+                default: "",
+                callback: (response) => {
+                    if (response == "delete") {
+                        socket.emit('remove-wall', scope.wall);
+                        socket.emit('get-walls', {});
+                        $state.go('home');
+                    }
+                }
+            })
+        };
+
         var init = () => {
             events();
         };
@@ -34,7 +50,8 @@ app.directive('settingsItem', (State, $state, Wall, Dialog) => ({
 
         scope = _.extend(scope, {
             newDialog: Dialog.newDialog,
-            getWallName
+            getWallName,
+            removeWall
         });
     }
 }));

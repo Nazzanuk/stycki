@@ -419,64 +419,6 @@ app.directive('dialogItem', function (State, $state, Wall, Dialog) {
     };
 });
 
-app.directive('loginItem', function (State, $state, $timeout) {
-    return {
-        templateUrl: 'login.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var init = function init() {};
-
-            init();
-
-            scope = _.extend(scope, {});
-        }
-    };
-});
-
-app.directive('headerItem', function (State, $state) {
-    return {
-        templateUrl: 'header.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var menuVisible = true,
-                currentscroll = 0;
-
-            var checkScroll = function checkScroll() {
-                menuVisible = $(window).scrollTop() <= currentscroll;
-                currentscroll = $(window).scrollTop();
-                scope.$digest();
-            };
-
-            var events = function events() {
-                $(window).on('scroll', checkScroll);
-            };
-
-            var init = function init() {
-                events();
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                isActive: function isActive(page) {
-                    return page == $state.current.name;
-                },
-                isMenuVisible: function isMenuVisible() {
-                    return menuVisible;
-                },
-                toggleMenu: State.toggleMenu,
-                getTitle: State.getTitle
-            });
-        }
-    };
-});
-
 app.directive('noteItem', function (State, $state, Wall) {
     return {
         templateUrl: 'note.html',
@@ -598,6 +540,23 @@ app.directive('noteItem', function (State, $state, Wall) {
     };
 });
 
+app.directive('loginItem', function (State, $state, $timeout) {
+    return {
+        templateUrl: 'login.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var init = function init() {};
+
+            init();
+
+            scope = _.extend(scope, {});
+        }
+    };
+});
+
 app.directive('menuItem', function (State, $state) {
     return {
         templateUrl: 'menu.html',
@@ -605,7 +564,8 @@ app.directive('menuItem', function (State, $state) {
         scope: {},
 
         link: function link(scope, element, attrs) {
-            var walls;
+            var walls,
+                shrink = false;
 
             var events = function events() {
                 socket.on('wall-list', function (data) {
@@ -634,7 +594,54 @@ app.directive('menuItem', function (State, $state) {
                 },
                 isWall: function isWall(wall_id) {
                     return wall_id == $state.params.id;
+                },
+                shrinkMe: function shrinkMe() {
+                    return shrink = !shrink;
+                },
+                isShrunk: function isShrunk() {
+                    return shrink;
                 }
+            });
+        }
+    };
+});
+
+app.directive('headerItem', function (State, $state) {
+    return {
+        templateUrl: 'header.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var menuVisible = true,
+                currentscroll = 0;
+
+            var checkScroll = function checkScroll() {
+                menuVisible = $(window).scrollTop() <= currentscroll;
+                currentscroll = $(window).scrollTop();
+                scope.$digest();
+            };
+
+            var events = function events() {
+                $(window).on('scroll', checkScroll);
+            };
+
+            var init = function init() {
+                events();
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                isActive: function isActive(page) {
+                    return page == $state.current.name;
+                },
+                isMenuVisible: function isMenuVisible() {
+                    return menuVisible;
+                },
+                toggleMenu: State.toggleMenu,
+                getTitle: State.getTitle
             });
         }
     };
@@ -653,47 +660,6 @@ app.directive('registerItem', function (State, $state, $timeout) {
             init();
 
             scope = _.extend(scope, {});
-        }
-    };
-});
-
-app.directive('settingsItem', function (State, $state, Wall, Dialog) {
-    return {
-        templateUrl: 'settings.html',
-        replace: true,
-        scope: {
-            wall: '=',
-            active: "="
-        },
-
-        link: function link(scope, element, attrs) {
-
-            var events = function events() {};
-
-            var getWallName = function getWallName() {
-                Dialog.newDialog({
-                    title: "Change Wall Name",
-                    message: "Wall names must be lowercase with dashes, no spaces.",
-                    placeholder: "wall-name",
-                    'default': scope.wall.name,
-                    callback: function callback(response) {
-                        scope.wall.name = response.replace(/\s+/g, '-').toLowerCase();
-                        socket.emit('save-wall', scope.wall);
-                        socket.emit('get-walls', {});
-                    }
-                });
-            };
-
-            var init = function init() {
-                events();
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                newDialog: Dialog.newDialog,
-                getWallName: getWallName
-            });
         }
     };
 });
@@ -738,6 +704,64 @@ app.directive('wallItem', function (State, $state, Wall, $timeout) {
                 },
                 addNote: Wall.addNote,
                 getNotes: Wall.getNotes
+            });
+        }
+    };
+});
+
+app.directive('settingsItem', function (State, $state, Wall, Dialog) {
+    return {
+        templateUrl: 'settings.html',
+        replace: true,
+        scope: {
+            wall: '=',
+            active: "="
+        },
+
+        link: function link(scope, element, attrs) {
+
+            var events = function events() {};
+
+            var getWallName = function getWallName() {
+                Dialog.newDialog({
+                    title: "Change Wall Name",
+                    message: "Wall names must be lowercase with dashes, no spaces.",
+                    placeholder: "wall-name",
+                    'default': scope.wall.name,
+                    callback: function callback(response) {
+                        scope.wall.name = response.replace(/\s+/g, '-').toLowerCase();
+                        socket.emit('save-wall', scope.wall);
+                        socket.emit('get-walls', {});
+                    }
+                });
+            };
+
+            var removeWall = function removeWall() {
+                Dialog.newDialog({
+                    title: "Delete Wall",
+                    message: "Type 'delete' to remove this wall.",
+                    placeholder: "",
+                    'default': "",
+                    callback: function callback(response) {
+                        if (response == "delete") {
+                            socket.emit('remove-wall', scope.wall);
+                            socket.emit('get-walls', {});
+                            $state.go('home');
+                        }
+                    }
+                });
+            };
+
+            var init = function init() {
+                events();
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                newDialog: Dialog.newDialog,
+                getWallName: getWallName,
+                removeWall: removeWall
             });
         }
     };

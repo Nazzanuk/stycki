@@ -4,7 +4,7 @@ app.directive('menuItem', (State, $state) => ({
     scope: {},
 
     link(scope, element, attrs) {
-        var walls;
+        var walls, shrink = false;
 
         var events = () => {
             socket.on('wall-list', (data) => {
@@ -25,7 +25,9 @@ app.directive('menuItem', (State, $state) => ({
             getWalls:() => walls,
             getScreen:() => $state.current.name,
             isScreen:(screen) => screen == $state.current.name,
-            isWall:(wall_id) => wall_id == $state.params.id
+            isWall:(wall_id) => wall_id == $state.params.id,
+            shrinkMe: () => shrink = !shrink,
+            isShrunk: () => shrink
         });
     }
 }));

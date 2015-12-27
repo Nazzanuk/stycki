@@ -51,6 +51,12 @@ module.exports = {
                 });
             });
 
+            socket.on('remove-wall', (wall) => {
+                Mongo.removeDocument('walls', {_id: wall._id}, () => {
+                    Mongo.findDocuments('walls', {}, {}, (walls) => socket.emit('wall-list', walls));
+                });
+            });
+
             socket.on('update-note', (note) => {
                 socket.broadcast.to(note.wall).emit('note-' + note._id, note);
             });

@@ -1,6 +1,6 @@
 <script type="text/ng-template" id="menu.html">
     <div template="menu">
-        <div class="menu">
+        <div class="menu" ng-class="{'shrink': isShrunk()}">
             <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
                 <i class="fa fa-home fa-fw"></i> &nbsp;
                 My Walls
@@ -27,6 +27,9 @@
             </div>
 
 
+            <div class="shrink-button" ng-click="shrinkMe()">
+                <i class="fa fa-chevron-left"></i>
+            </div>
         </div>
     </div>
 </script>
