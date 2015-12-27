@@ -1,14 +1,15 @@
 <script type="text/ng-template" id="login.html">
     <div template="login">
         <div class="login">
+            <div class="login-title">Stycki</div>
             <div class="login-box">
-                <div class="login-header">Stycki</div>
+                <!--<div class="login-header">Welcome</div>-->
 
                 <div class="login-label">Email</div>
-                <input class="login-input" placeholder="Email"/>
+                <input class="login-input"/>
 
                 <div class="login-label">Password</div>
-                <input type="password" class="login-input" placeholder="Password"/>
+                <input type="password" class="login-input" placeholder=""/>
 
                 <p>Forgot your password?</p>
                 <div class="login-hr"></div>
@@ -16,7 +17,7 @@
                 <div class="login-hr"></div>
                 <div class="login-butns">
                     <div class="butn secondary">Create Account</div>
-                    <div class="butn secondary">Learn More</div>
+                    <div class="butn secondary" ui-sref="home">Guest</div>
                 </div>
             </div>
 

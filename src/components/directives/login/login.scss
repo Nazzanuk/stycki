@@ -11,6 +11,18 @@
   position: fixed;
   z-index: 2000000;
 
+  .login-title {
+    position: absolute;
+    text-align: center;
+    font-size: 60px;
+    top: 50%;
+    font-weight: 100;
+    color: white;
+    width: 500px;
+    line-height: 1;
+    margin-top: -350px;
+  }
+
   .login {
     flex: 1;
     display: flex;
@@ -68,6 +80,7 @@
         border: none;
         font-weight: 800;
         outline: none;
+        border-left:3px solid darken($primary, 20%);
       }
 
       .login-hr {

@@ -419,6 +419,23 @@ app.directive('dialogItem', function (State, $state, Wall, Dialog) {
     };
 });
 
+app.directive('loginItem', function (State, $state, $timeout) {
+    return {
+        templateUrl: 'login.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var init = function init() {};
+
+            init();
+
+            scope = _.extend(scope, {});
+        }
+    };
+});
+
 app.directive('headerItem', function (State, $state) {
     return {
         templateUrl: 'header.html',
@@ -455,65 +472,6 @@ app.directive('headerItem', function (State, $state) {
                 },
                 toggleMenu: State.toggleMenu,
                 getTitle: State.getTitle
-            });
-        }
-    };
-});
-
-app.directive('loginItem', function (State, $state, $timeout) {
-    return {
-        templateUrl: 'login.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var init = function init() {};
-
-            init();
-
-            scope = _.extend(scope, {});
-        }
-    };
-});
-
-app.directive('menuItem', function (State, $state) {
-    return {
-        templateUrl: 'menu.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-            var walls;
-
-            var events = function events() {
-                socket.on('wall-list', function (data) {
-                    console.log(data);
-                    walls = data;
-                    scope.$apply();
-                });
-            };
-
-            var init = function init() {
-                events();
-                socket.emit('get-walls', {});
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                getWalls: function getWalls() {
-                    return walls;
-                },
-                getScreen: function getScreen() {
-                    return $state.current.name;
-                },
-                isScreen: function isScreen(screen) {
-                    return screen == $state.current.name;
-                },
-                isWall: function isWall(wall_id) {
-                    return wall_id == $state.params.id;
-                }
             });
         }
     };
@@ -640,6 +598,65 @@ app.directive('noteItem', function (State, $state, Wall) {
     };
 });
 
+app.directive('menuItem', function (State, $state) {
+    return {
+        templateUrl: 'menu.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+            var walls;
+
+            var events = function events() {
+                socket.on('wall-list', function (data) {
+                    console.log(data);
+                    walls = data;
+                    scope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+                socket.emit('get-walls', {});
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                getWalls: function getWalls() {
+                    return walls;
+                },
+                getScreen: function getScreen() {
+                    return $state.current.name;
+                },
+                isScreen: function isScreen(screen) {
+                    return screen == $state.current.name;
+                },
+                isWall: function isWall(wall_id) {
+                    return wall_id == $state.params.id;
+                }
+            });
+        }
+    };
+});
+
+app.directive('registerItem', function (State, $state, $timeout) {
+    return {
+        templateUrl: 'register.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var init = function init() {};
+
+            init();
+
+            scope = _.extend(scope, {});
+        }
+    };
+});
+
 app.directive('settingsItem', function (State, $state, Wall, Dialog) {
     return {
         templateUrl: 'settings.html',
@@ -677,23 +694,6 @@ app.directive('settingsItem', function (State, $state, Wall, Dialog) {
                 newDialog: Dialog.newDialog,
                 getWallName: getWallName
             });
-        }
-    };
-});
-
-app.directive('registerItem', function (State, $state, $timeout) {
-    return {
-        templateUrl: 'register.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var init = function init() {};
-
-            init();
-
-            scope = _.extend(scope, {});
         }
     };
 });

@@ -65,6 +65,34 @@
         </div>
     </div>
 </script>
+<script type="text/ng-template" id="login.html">
+    <div template="login">
+        <div class="login">
+            <div class="login-title">Stycki</div>
+            <div class="login-box">
+                <!--<div class="login-header">Welcome</div>-->
+
+                <div class="login-label">Email</div>
+                <input class="login-input"/>
+
+                <div class="login-label">Password</div>
+                <input type="password" class="login-input" placeholder=""/>
+
+                <p>Forgot your password?</p>
+                <div class="login-hr"></div>
+                <div class="butn" ui-sref="home">Login</div>
+                <div class="login-hr"></div>
+                <div class="login-butns">
+                    <div class="butn secondary">Create Account</div>
+                    <div class="butn secondary" ui-sref="home">Guest</div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</script>
 <script type="text/ng-template" id="header.html">
     <div template="header">
         <div class="header">
@@ -73,27 +101,29 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="login.html">
-    <div template="login">
-        <div class="login">
-            <div class="login-box">
-                <div class="login-header">Stycki</div>
+<script type="text/ng-template" id="note.html">
+    <div template="note">
+        <div class="note shadow deleted" style="{{getRotation()}}" ng-style="getStyle()">
+            <div class="note-box color-{{color}}">
+                <div class="note-header">
+                    <div class="header-icon pull-left" ng-click="setColor()">
+                        <i class="fa fa-circle"></i>
+                    </div>
 
-                <div class="login-label">Email</div>
-                <input class="login-input" placeholder="Email"/>
+                    <div class="header-icon pull-right" ng-click="removeNote()">
+                        <i class="fa fa-times"></i>
+                    </div>
 
-                <div class="login-label">Password</div>
-                <input type="password" class="login-input" placeholder="Password"/>
-
-                <p>Forgot your password?</p>
-                <div class="login-hr"></div>
-                <div class="butn" ui-sref="home">Login</div>
-                <div class="login-hr"></div>
-                <div class="login-butns">
-                    <div class="butn secondary">Create Account</div>
-                    <div class="butn secondary">Learn More</div>
+                </div>
+                <div class="note-content">
+                    <div class="note-text" contenteditable
+                         ng-keyup="updateText($event)"
+                         ng-blur="setText($event)"
+                         ng-bind="getText()"
+                    ></div>
                 </div>
             </div>
+
 
 
 
@@ -132,45 +162,6 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="note.html">
-    <div template="note">
-        <div class="note shadow deleted" style="{{getRotation()}}" ng-style="getStyle()">
-            <div class="note-box color-{{color}}">
-                <div class="note-header">
-                    <div class="header-icon pull-left" ng-click="setColor()">
-                        <i class="fa fa-circle"></i>
-                    </div>
-
-                    <div class="header-icon pull-right" ng-click="removeNote()">
-                        <i class="fa fa-times"></i>
-                    </div>
-
-                </div>
-                <div class="note-content">
-                    <div class="note-text" contenteditable
-                         ng-keyup="updateText($event)"
-                         ng-blur="setText($event)"
-                         ng-bind="getText()"
-                    ></div>
-                </div>
-            </div>
-
-
-
-
-        </div>
-    </div>
-</script>
-<script type="text/ng-template" id="settings.html">
-    <div template="settings">
-        <div class="settings" ng-class="{active:active}">
-            <!--<div class="settings-item" ng-click="getWallName()">#{{wall.name}}</div>-->
-            <div class="settings-item" ng-click="getWallName()"><i class="fa fa-pencil"></i> &nbsp; Change Name</div>
-            <!--<div class="settings-item" ng-click="getWallName()">Change Name</div>-->
-
-        </div>
-    </div>
-</script>
 <script type="text/ng-template" id="register.html">
     <div template="register">
         <div class="register">
@@ -194,6 +185,16 @@
             </div>
 
 
+
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="settings.html">
+    <div template="settings">
+        <div class="settings" ng-class="{active:active}">
+            <!--<div class="settings-item" ng-click="getWallName()">#{{wall.name}}</div>-->
+            <div class="settings-item" ng-click="getWallName()"><i class="fa fa-pencil"></i> &nbsp; Change Name</div>
+            <!--<div class="settings-item" ng-click="getWallName()">Change Name</div>-->
 
         </div>
     </div>

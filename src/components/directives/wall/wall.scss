@@ -72,8 +72,8 @@
         height: 40px;
         line-height: 40px;
         margin: 15px;
-        background: $primary;
-        background: darken($primary, 20%);
+        background: $primary-2;
+        background: darken($primary-2, 20%);
         color: white;
         //background: radial-gradient(ellipse at center, $primary 50%, darken($primary, 5%) 100%);
         border-radius: 100px;
