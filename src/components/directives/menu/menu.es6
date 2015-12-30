@@ -8,7 +8,7 @@ app.directive('menuItem', (State, $state) => ({
 
         var events = () => {
             socket.on('wall-list', (data) => {
-                console.log(data)
+                console.log(data);
                 walls = data;
                 scope.$apply();
             });

@@ -91,6 +91,57 @@ h1, h2 {
   .butn.fourth {
     background: #eb7768; }
 
+[template=splash] {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #a1d4e8;
+  background: radial-gradient(ellipse at center, #afe5ce 0%, #2a88ac 100%);
+  background: #2a88ac;
+  position: fixed;
+  z-index: 20000000;
+  transition: .6s; }
+  [template=splash].inactive {
+    opacity: 0;
+    visibility: hidden; }
+  [template=splash] .splash-title {
+    position: absolute;
+    text-align: center;
+    font-size: 40px;
+    top: 50%;
+    font-weight: 100;
+    color: white;
+    width: 500px;
+    line-height: 60px;
+    margin-top: -120px;
+    left: 50%;
+    margin-left: -250px; }
+  [template=splash] .splash {
+    -webkit-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-align-content: center;
+        -ms-flex-line-pack: center;
+            align-content: center; }
+
 [template=dialog] .dialog {
   position: fixed;
   background: rgba(255, 255, 255, 0.8);
@@ -204,7 +255,7 @@ h1, h2 {
     color: white;
     width: 500px;
     line-height: 1;
-    margin-top: -350px; }
+    margin-top: -300px; }
   [template=login] .login {
     -webkit-flex: 1;
         -ms-flex: 1;

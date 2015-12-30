@@ -27,21 +27,6 @@ socket.on('connect', function () {
 socket.on('disconnect', function () {
     return console.log('disconnected!');
 });
-app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
-
-    var init = function init() {
-        $timeout(function () {
-            return $element.find('[screen]').addClass('active');
-        }, 50);
-    };
-
-    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        $(document).scrollTop(0);
-    });
-
-    init();
-});
-
 app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
     var resolve = {
@@ -75,6 +60,21 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
     //$locationProvider.html5Mode(true);
 });
+app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
+
+    var init = function init() {
+        $timeout(function () {
+            return $element.find('[screen]').addClass('active');
+        }, 50);
+    };
+
+    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        $(document).scrollTop(0);
+    });
+
+    init();
+});
+
 'use strict';
 
 app.factory('Alert', function ($timeout, $rootScope) {
@@ -288,7 +288,8 @@ app.factory('Dialog', function ($timeout, $rootScope) {
 });
 app.factory('State', function ($rootScope, $sce, $state, $timeout) {
 
-    var title = 'Content Types';
+    var title = 'Content Types',
+        _showSplash = true;
 
     var gen_id = function gen_id() {
         var s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -299,6 +300,9 @@ app.factory('State', function ($rootScope, $sce, $state, $timeout) {
 
     var init = function init() {
         console.log('go home', $state);
+        $timeout(function () {
+            return _showSplash = false;
+        }, 1000);
 
         //$timeout(() => $state.go('login'), 1);
 
@@ -312,6 +316,9 @@ app.factory('State', function ($rootScope, $sce, $state, $timeout) {
     _.extend($rootScope, {
         html: function html() {
             return $sce.trustAsHtml;
+        },
+        showSplash: function showSplash() {
+            return _showSplash;
         }
     });
 
@@ -840,7 +847,7 @@ app.controller('HomeScreen', function ($element, $timeout, API, $scope) {
     _.extend($scope, {});
 });
 
-app.controller('LoginScreen', function ($element, $timeout, API, $scope) {
+app.controller('RegisterScreen', function ($element, $timeout, API, $scope) {
 
     var init = function init() {
         $timeout(function () {
@@ -853,7 +860,7 @@ app.controller('LoginScreen', function ($element, $timeout, API, $scope) {
     _.extend($scope, {});
 });
 
-app.controller('RegisterScreen', function ($element, $timeout, API, $scope) {
+app.controller('LoginScreen', function ($element, $timeout, API, $scope) {
 
     var init = function init() {
         $timeout(function () {

@@ -37,6 +37,16 @@
 </head>
 <body data-ng-app="app">
 
+<div template="splash" ng-class="{inactive:!$root.showSplash()}">
+    <div class="splash">
+        <!--<div class="splash-title">Stycki</div>-->
+        <div class="splash-title">
+            <div>Welcome</div>
+            <!--<i class="fa fa-circle-o-notch fa-spin "></i>-->
+        </div>
+    </div>
+</div>
+
 <header-item></header-item>
 <dialog-item></dialog-item>
 
@@ -321,14 +331,14 @@
 
     </div>
 </script>
-<script type="text/ng-template" id="login-screen.html">
-    <div screen style="position: fixed;z-index: 2000000;">
-        <login-item></login-item>
-    </div>
-</script>
 <script type="text/ng-template" id="register-screen.html">
     <div screen style="position: fixed;z-index: 2000000;">
         <register-item></register-item>
+    </div>
+</script>
+<script type="text/ng-template" id="login-screen.html">
+    <div screen style="position: fixed;z-index: 2000000;">
+        <login-item></login-item>
     </div>
 </script>
 <script type="text/ng-template" id="wall-screen.html">

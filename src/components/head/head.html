@@ -37,6 +37,16 @@
 </head>
 <body data-ng-app="app">
 
+<div template="splash" ng-class="{inactive:!$root.showSplash()}">
+    <div class="splash">
+        <!--<div class="splash-title">Stycki</div>-->
+        <div class="splash-title">
+            <div>Welcome</div>
+            <!--<i class="fa fa-circle-o-notch fa-spin "></i>-->
+        </div>
+    </div>
+</div>
+
 <header-item></header-item>
 <dialog-item></dialog-item>
 

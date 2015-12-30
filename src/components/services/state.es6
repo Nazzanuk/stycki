@@ -1,6 +1,6 @@
 app.factory('State', ($rootScope, $sce, $state, $timeout) => {
 
-    var title = 'Content Types';
+    var title = 'Content Types', showSplash = true;
 
     var gen_id = () => {
         var s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -9,6 +9,7 @@ app.factory('State', ($rootScope, $sce, $state, $timeout) => {
 
     var init = () => {
         console.log('go home', $state);
+        $timeout(() => showSplash = false, 1000);
 
         //$timeout(() => $state.go('login'), 1);
 
@@ -20,7 +21,8 @@ app.factory('State', ($rootScope, $sce, $state, $timeout) => {
     init();
 
     _.extend($rootScope, {
-        html: () => $sce.trustAsHtml
+        html: () => $sce.trustAsHtml,
+        showSplash: () => showSplash
     });
 
     return {
