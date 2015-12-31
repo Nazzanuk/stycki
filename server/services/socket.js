@@ -21,6 +21,21 @@ module.exports = {
                 Mongo.findDocuments('notes', {wall: wall_id}, {}, (notes) => io.to(wall_id).emit('notes', notes));
             });
 
+            socket.on('add-user', (user) => {
+                Mongo.insertDocument('users', user, (result, err) => {
+                    if (err) socket.emit('email-exists');
+                    else Mongo.findDocuments('users', user, {}, (users) => socket.emit('valid-user', users[0]));
+                });
+            });
+
+            socket.on('check-user', (user) => {
+                console.log('check-user', user);
+                Mongo.findDocuments('users', user, {}, (users) => {
+                    if (users[0]) socket.emit('valid-user', users[0]);
+                    else socket.emit('invalid-login');
+                });
+            });
+
             socket.on('get-wall', (wall_id) => {
                 Mongo.findDocuments('walls', {_id: wall_id}, {}, (walls) => socket.emit('wall', walls[0]));
             });

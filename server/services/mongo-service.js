@@ -18,11 +18,11 @@ module.exports = {
     },
 
     findDocuments(collection, data, fields, callback) {
-        db.collection(collection).find(data, fields).toArray((err, docs) => callback(docs));
+        db.collection(collection).find(data, fields).toArray((err, docs) => callback(docs, err));
     },
 
     insertDocument(collection, data, callback) {
-        db.collection(collection).insert(data, (err, docs) => callback(docs));
+        db.collection(collection).insert(data, (err, docs) => callback(docs, err));
     },
 
     updateDocument(collection, query, data, callback) {

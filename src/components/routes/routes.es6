@@ -19,6 +19,12 @@ app.config(($stateProvider, $urlRouterProvider, $locationProvider) => {
             controller: "LoginScreen",
             resolve: resolve
         })
+        .state('register', {
+            url: "/register",
+            templateUrl: "register-screen.html",
+            controller: "RegisterScreen",
+            resolve: resolve
+        })
         .state('home', {
             url: "/home",
             templateUrl: "home-screen.html",

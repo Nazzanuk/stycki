@@ -6,18 +6,20 @@
                 <!--<div class="login-header">Welcome</div>-->
 
                 <div class="login-label">Email</div>
-                <input class="login-input"/>
+                <input class="login-input" ng-model="email" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})" autofocus/>
 
                 <div class="login-label">Password</div>
-                <input type="password" class="login-input" placeholder=""/>
+                <input type="password" class="login-input" ng-model="password" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})"/>
 
+                <p ng-show="errorMessage()">{{errorMessage()}}</p>
+                <div class="login-hr" ng-show="errorMessage()"></div>
                 <p>Forgot your password?</p>
                 <div class="login-hr"></div>
-                <div class="butn" ui-sref="home">Login</div>
+                <div class="butn" ng-click="checkUser({email:email, password:password})">Login &nbsp; <i class="fa fa-check"></i></div>
                 <div class="login-hr"></div>
                 <div class="login-butns">
-                    <div class="butn secondary">Create Account</div>
-                    <div class="butn secondary" ui-sref="home">Guest</div>
+                    <div class="butn secondary" ui-sref="register">Create Account &nbsp; <i class="fa fa-user-plus"></i></div>
+                    <div class="butn secondary" ng-click="setGuest()">Guest &nbsp; <i class="fa fa-smile-o"></i></div>
                 </div>
             </div>
 

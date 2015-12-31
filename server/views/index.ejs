@@ -37,6 +37,7 @@
 </head>
 <body data-ng-app="app">
 
+<div template="splash" ng-class="{inactive:!$root.showUnder()}" style="z-index: 1000001"></div>
 <div template="splash" ng-class="{inactive:!$root.showSplash()}">
     <div class="splash">
         <!--<div class="splash-title">Stycki</div>-->
@@ -80,6 +81,61 @@
         <div class="header">
             Stycki
 
+            <div class="pull-right">Hi {{getUser().name}} &nbsp; <i class="fa fa-user"></i></div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="menu.html">
+    <div template="menu">
+        <div class="menu" ng-class="{'shrink': isShrunk()}">
+            <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
+                <i class="fa fa-home fa-fw"></i> &nbsp;
+                My Walls
+            </div>
+            <div class="sub-menu-item"
+                 ui-sref="wall({id:wall._id, name:wall.name})"
+                 ng-repeat="wall in getWalls() track by wall._id"
+                 ng-class="{'active':isWall(wall._id)}"
+            >
+                <!--<i class="fa fa-star fa-fw"></i> &nbsp;-->
+                <i class="fa fa-star"></i> &nbsp; #{{wall.name}}
+            </div>
+            <div class="menu-item">
+                <i class="fa fa-info fa-fw"></i> &nbsp;
+                Tutorial
+                <em>
+                    <small><strong>
+                        <small>- Coming Soon</small>
+                    </strong></small>
+                </em>
+            </div>
+            <div class="menu-item">
+                <i class="fa fa-cog fa-fw"></i> &nbsp;
+                Settings
+                <em>
+                    <small><strong>
+                        <small>- Coming Soon</small>
+                    </strong></small>
+                </em>
+            </div>
+            <div class="menu-item">
+                <i class="fa fa-comment fa-fw"></i> &nbsp;
+                Feedback
+                <em>
+                    <small><strong>
+                        <small>- Coming Soon</small>
+                    </strong></small>
+                </em>
+            </div>
+            <div class="menu-item" ng-click="logout()">
+                <i class="fa fa-sign-out fa-fw"></i> &nbsp;
+                Logout
+            </div>
+
+
+            <div class="shrink-button" ng-click="shrinkMe()">
+                <i class="fa fa-chevron-left"></i>
+            </div>
         </div>
     </div>
 </script>
@@ -91,18 +147,20 @@
                 <!--<div class="login-header">Welcome</div>-->
 
                 <div class="login-label">Email</div>
-                <input class="login-input"/>
+                <input class="login-input" ng-model="email" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})" autofocus/>
 
                 <div class="login-label">Password</div>
-                <input type="password" class="login-input" placeholder=""/>
+                <input type="password" class="login-input" ng-model="password" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})"/>
 
+                <p ng-show="errorMessage()">{{errorMessage()}}</p>
+                <div class="login-hr" ng-show="errorMessage()"></div>
                 <p>Forgot your password?</p>
                 <div class="login-hr"></div>
-                <div class="butn" ui-sref="home">Login</div>
+                <div class="butn" ng-click="checkUser({email:email, password:password})">Login &nbsp; <i class="fa fa-check"></i></div>
                 <div class="login-hr"></div>
                 <div class="login-butns">
-                    <div class="butn secondary">Create Account</div>
-                    <div class="butn secondary" ui-sref="home">Guest</div>
+                    <div class="butn secondary" ui-sref="register">Create Account &nbsp; <i class="fa fa-user-plus"></i></div>
+                    <div class="butn secondary" ng-click="setGuest()">Guest &nbsp; <i class="fa fa-smile-o"></i></div>
                 </div>
             </div>
 
@@ -118,6 +176,9 @@
                 <div class="note-header">
                     <div class="header-icon pull-left" ng-click="setColor()">
                         <i class="fa fa-circle"></i>
+                    </div>
+                    <div class="header-icon pull-left">
+                        <i class="fa fa-user"></i>
                     </div>
 
                     <div class="header-icon pull-right" ng-click="removeNote()">
@@ -140,61 +201,30 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="menu.html">
-    <div template="menu">
-        <div class="menu" ng-class="{'shrink': isShrunk()}">
-            <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
-                <i class="fa fa-home fa-fw"></i> &nbsp;
-                My Walls
-            </div>
-            <div class="sub-menu-item"
-                 ui-sref="wall({id:wall._id, name:wall.name})"
-                 ng-repeat="wall in getWalls() track by wall._id"
-                 ng-class="{'active':isWall(wall._id)}"
-            >
-                <!--<i class="fa fa-star fa-fw"></i> &nbsp;-->
-                <i class="fa fa-star"></i> &nbsp; #{{wall.name}}
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-info fa-fw"></i> &nbsp;
-                Tutorial
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-cog fa-fw"></i> &nbsp;
-                Settings
-            </div>
-            <div class="menu-item" ui-sref="login" ng-class="{'active':isScreen('login')}">
-                <i class="fa fa-sign-out fa-fw"></i> &nbsp;
-                Logout
-            </div>
-
-
-            <div class="shrink-button" ng-click="shrinkMe()">
-                <i class="fa fa-chevron-left"></i>
-            </div>
-        </div>
-    </div>
-</script>
 <script type="text/ng-template" id="register.html">
     <div template="register">
         <div class="register">
+            <div class="register-title" style="margin-top: -350px;">Create Account</div>
             <div class="register-box">
-                <div class="register-header">WLL.space</div>
+                <!--<div class="register-header">Welcome</div>-->
 
-                <div class="register-label">Email</div>
-                <input class="register-input" placeholder="Email"/>
+                <div class="register-label">First Name *</div>
+                <input class="register-input" ng-model="name" ng-change="clearError()" ng-enter="register(name, email, password)" autofocus/>
 
-                <div class="register-label">Password</div>
-                <input type="password" class="register-input" placeholder="Password"/>
+                <div class="register-label">Email *</div>
+                <input type="email" class="register-input" ng-model="email" ng-change="clearError()" ng-enter="register(name, email, password)"/>
 
-                <p>Forgot your password</p>
+                <div class="register-label">Password *</div>
+                <input type="password" class="register-input" ng-model="password" ng-change="clearError()" ng-enter="register(name, email, password)"/>
+
+                <div class="register-hr" ng-show="errorMessage()"></div>
+                <p ng-show="errorMessage()">{{errorMessage()}}</p>
                 <div class="register-hr"></div>
-                <div class="butn" ui-sref="home">register</div>
+                <div class="butn" ng-click="register(name, email, password)">Register &nbsp; <i class="fa fa-check"></i> </div>
                 <div class="register-hr"></div>
-                <div class="register-butns">
-                    <div class="butn secondary">Create Account</div>
-                    <div class="butn secondary">Learn More</div>
-                </div>
+                    <div class="butn secondary" ui-sref="login">
+                        Back &nbsp; <i class="fa fa-times"></i>
+                    </div>
             </div>
 
 
@@ -331,14 +361,14 @@
 
     </div>
 </script>
-<script type="text/ng-template" id="register-screen.html">
-    <div screen style="position: fixed;z-index: 2000000;">
-        <register-item></register-item>
-    </div>
-</script>
 <script type="text/ng-template" id="login-screen.html">
     <div screen style="position: fixed;z-index: 2000000;">
         <login-item></login-item>
+    </div>
+</script>
+<script type="text/ng-template" id="register-screen.html">
+    <div screen style="position: fixed;z-index: 2000000;">
+        <register-item></register-item>
     </div>
 </script>
 <script type="text/ng-template" id="wall-screen.html">

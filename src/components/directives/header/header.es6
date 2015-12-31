@@ -1,4 +1,4 @@
-app.directive('headerItem', (State, $state) => ({
+app.directive('headerItem', (State, $state, User) => ({
     templateUrl: 'header.html',
     replace:true,
     scope: {},
@@ -27,7 +27,8 @@ app.directive('headerItem', (State, $state) => ({
             isActive:(page) => page == $state.current.name,
             isMenuVisible: () => menuVisible,
             toggleMenu: State.toggleMenu,
-            getTitle: State.getTitle
+            getTitle: State.getTitle,
+            getUser: User.getUser
         });
     }
 }));

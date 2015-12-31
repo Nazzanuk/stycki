@@ -37,6 +37,7 @@
 </head>
 <body data-ng-app="app">
 
+<div template="splash" ng-class="{inactive:!$root.showUnder()}" style="z-index: 1000001"></div>
 <div template="splash" ng-class="{inactive:!$root.showSplash()}">
     <div class="splash">
         <!--<div class="splash-title">Stycki</div>-->

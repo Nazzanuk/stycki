@@ -47,6 +47,11 @@ gulp.task('gen-js', () =>
     gulp.src(['src/app.es6', 'src/components/**/*.es6'])
         .pipe(concat('app.js'))
         .pipe(babel())
+        .on('error', function(e) {
+            console.log('>>> ERROR', e);
+            // emit here
+            this.emit('end');
+        })
         .pipe(gulp.dest("release/public"))
 );
 
@@ -57,7 +62,17 @@ gulp.task('gen-css', () =>
         ])
         .pipe(concat('app.scss'))
         .pipe(sass({errLogToConsole: true}))
+        .on('error', function(e) {
+            console.log('>>> ERROR', e);
+            // emit here
+            this.emit('end');
+        })
         .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
+        .on('error', function(e) {
+            console.log('>>> ERROR', e);
+            // emit here
+            this.emit('end');
+        })
         .pipe(gulp.dest("release/public"))
 );
 

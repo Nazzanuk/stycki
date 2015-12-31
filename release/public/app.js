@@ -16,6 +16,20 @@ app.directive('ngEnter', function () {
     };
 });
 
+String.prototype.hashCode = function () {
+    var hash = 0,
+        i,
+        chr,
+        len;
+    if (this.length === 0) return hash;
+    for (i = 0, len = this.length; i < len; i++) {
+        chr = this.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
+
 var server = window.location.host;
 //var server ='https://stycki.herokuapp.com:5001';
 
@@ -45,6 +59,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
         url: "/",
         templateUrl: "login-screen.html",
         controller: "LoginScreen",
+        resolve: resolve
+    }).state('register', {
+        url: "/register",
+        templateUrl: "register-screen.html",
+        controller: "RegisterScreen",
         resolve: resolve
     }).state('home', {
         url: "/home",
@@ -286,10 +305,11 @@ app.factory('Dialog', function ($timeout, $rootScope) {
         closeDialog: closeDialog
     };
 });
-app.factory('State', function ($rootScope, $sce, $state, $timeout) {
+app.factory('State', function ($rootScope, $sce, $state, $timeout, User) {
 
     var title = 'Content Types',
-        _showSplash = true;
+        _showSplash = true,
+        _showUnder = true;
 
     var gen_id = function gen_id() {
         var s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -298,17 +318,29 @@ app.factory('State', function ($rootScope, $sce, $state, $timeout) {
         }).join('');
     };
 
+    var events = function events() {
+        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+            $(document).scrollTop(0);
+
+            if (!User.getUser()._id) if (toState.name != "register" && toState.name != "login") {
+                $state.go('login');
+                return;
+            }
+
+            if (User.getUser()._id) if (toState.name == "register" || toState.name == "login") {
+                $state.go('home');
+                return;
+            }
+            _showUnder = toState.name == "register" || toState.name == "login";
+        });
+    };
+
     var init = function init() {
-        console.log('go home', $state);
+        events();
+
         $timeout(function () {
             return _showSplash = false;
         }, 1000);
-
-        //$timeout(() => $state.go('login'), 1);
-
-        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-            $(document).scrollTop(0);
-        });
     };
 
     init();
@@ -319,6 +351,9 @@ app.factory('State', function ($rootScope, $sce, $state, $timeout) {
         },
         showSplash: function showSplash() {
             return _showSplash;
+        },
+        showUnder: function showUnder() {
+            return _showUnder;
         }
     });
 
@@ -332,6 +367,70 @@ app.factory('State', function ($rootScope, $sce, $state, $timeout) {
             return title;
         },
         gen_id: gen_id
+    };
+});
+app.factory('User', function ($rootScope, $sce, $state, $timeout) {
+
+    var user = {
+        _id: '',
+        name: ''
+    };
+
+    var setGuest = function setGuest() {
+        user = {
+            _id: 'guest',
+            name: 'Guest'
+        };
+    };
+
+    var clearUser = function clearUser() {
+        user = {
+            _id: '',
+            name: ''
+        };
+    };
+
+    var checkUser = function checkUser(userDetails) {
+        console.log(userDetails);
+        userDetails.password += "saltMe";
+        userDetails.password = userDetails.password.hashCode();
+        userDetails = _.extend(userDetails, { _id: userDetails.email });
+        socket.emit('check-user', userDetails);
+    };
+
+    var registerUser = function registerUser(userDetails) {
+        userDetails.password += "saltMe";
+        userDetails.password = userDetails.password.hashCode();
+        user = _.extend(user, userDetails);
+        user = _.extend(user, { _id: userDetails.email });
+        socket.emit('add-user', user);
+    };
+
+    var events = function events() {
+        socket.on('valid-user', function (data) {
+            console.log('valid-user', data);
+            if (!data) return;
+            user = data;
+            $rootScope.$apply();
+            $state.go('home');
+            localStorage.setItem('email', data.email);
+        });
+    };
+
+    var init = function init() {
+        events();
+    };
+
+    init();
+
+    return {
+        registerUser: registerUser,
+        clearUser: clearUser,
+        setGuest: setGuest,
+        checkUser: checkUser,
+        getUser: function getUser() {
+            return user;
+        }
     };
 });
 app.factory('Wall', function (State, $rootScope) {
@@ -426,7 +525,7 @@ app.directive('dialogItem', function (State, $state, Wall, Dialog) {
     };
 });
 
-app.directive('headerItem', function (State, $state) {
+app.directive('headerItem', function (State, $state, User) {
     return {
         templateUrl: 'header.html',
         replace: true,
@@ -461,25 +560,107 @@ app.directive('headerItem', function (State, $state) {
                     return menuVisible;
                 },
                 toggleMenu: State.toggleMenu,
-                getTitle: State.getTitle
+                getTitle: State.getTitle,
+                getUser: User.getUser
             });
         }
     };
 });
 
-app.directive('loginItem', function (State, $state, $timeout) {
+app.directive('menuItem', function (State, $state, User) {
+    return {
+        templateUrl: 'menu.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+            var walls,
+                shrink = false;
+
+            var logout = function logout() {
+                User.clearUser();
+                $state.go('login');
+            };
+
+            var events = function events() {
+                socket.on('wall-list', function (data) {
+                    console.log(data);
+                    walls = data;
+                    scope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+                socket.emit('get-walls', {});
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                getWalls: function getWalls() {
+                    return walls;
+                },
+                getScreen: function getScreen() {
+                    return $state.current.name;
+                },
+                isScreen: function isScreen(screen) {
+                    return screen == $state.current.name;
+                },
+                isWall: function isWall(wall_id) {
+                    return wall_id == $state.params.id;
+                },
+                shrinkMe: function shrinkMe() {
+                    return shrink = !shrink;
+                },
+                isShrunk: function isShrunk() {
+                    return shrink;
+                },
+                logout: logout
+            });
+        }
+    };
+});
+
+app.directive('loginItem', function (State, $state, $timeout, User, $rootScope) {
     return {
         templateUrl: 'login.html',
         replace: true,
         scope: {},
 
         link: function link(scope, element, attrs) {
+            var _errorMessage = "";
 
-            var init = function init() {};
+            var setGuest = function setGuest() {
+                User.setGuest();
+                $state.go('home');
+            };
+
+            var events = function events() {
+                socket.on('invalid-login', function () {
+                    console.log('invalid-login');
+                    _errorMessage = "The email and / or password is incorrect";
+                    $rootScope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+                scope.email = localStorage.getItem('email');
+            };
 
             init();
 
-            scope = _.extend(scope, {});
+            scope = _.extend(scope, {
+                setGuest: setGuest,
+                checkUser: User.checkUser,
+                errorMessage: function errorMessage() {
+                    return _errorMessage;
+                },
+                clearError: function clearError() {
+                    return _errorMessage = "";
+                }
+            });
         }
     };
 });
@@ -605,56 +786,7 @@ app.directive('noteItem', function (State, $state, Wall) {
     };
 });
 
-app.directive('menuItem', function (State, $state) {
-    return {
-        templateUrl: 'menu.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-            var walls,
-                shrink = false;
-
-            var events = function events() {
-                socket.on('wall-list', function (data) {
-                    console.log(data);
-                    walls = data;
-                    scope.$apply();
-                });
-            };
-
-            var init = function init() {
-                events();
-                socket.emit('get-walls', {});
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                getWalls: function getWalls() {
-                    return walls;
-                },
-                getScreen: function getScreen() {
-                    return $state.current.name;
-                },
-                isScreen: function isScreen(screen) {
-                    return screen == $state.current.name;
-                },
-                isWall: function isWall(wall_id) {
-                    return wall_id == $state.params.id;
-                },
-                shrinkMe: function shrinkMe() {
-                    return shrink = !shrink;
-                },
-                isShrunk: function isShrunk() {
-                    return shrink;
-                }
-            });
-        }
-    };
-});
-
-app.directive('registerItem', function (State, $state, $timeout) {
+app.directive('registerItem', function (State, $state, $timeout, User, $rootScope) {
     return {
         templateUrl: 'register.html',
         replace: true,
@@ -662,11 +794,52 @@ app.directive('registerItem', function (State, $state, $timeout) {
 
         link: function link(scope, element, attrs) {
 
-            var init = function init() {};
+            var _errorMessage2 = "";
+
+            var validate = function validate(name, email) {
+                var password = arguments.length <= 2 || arguments[2] === undefined ? "" : arguments[2];
+                return validateList([[!name, "Name is required."], [!email, "A valid email is required."], [!password, "Password is required."], [password.length < 8, "Password must be at least 8 characters."]]);
+            };
+
+            var validateList = function validateList(list) {
+                var valid = true;
+                _.each(list, function (item) {
+                    if (item[0]) {
+                        _errorMessage2 = item[1];
+                        valid = false;
+                    }
+                });
+                return valid;
+            };
+
+            var register = function register(name, email, password) {
+                if (validate(name, email, password)) User.registerUser({ name: name, email: email, password: password });
+            };
+
+            var events = function events() {
+                socket.on('email-exists', function () {
+                    console.log('email-exists');
+                    _errorMessage2 = "This email is already registered";
+                    $rootScope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+            };
 
             init();
 
-            scope = _.extend(scope, {});
+            scope = _.extend(scope, {
+                register: register,
+                errorMessage: function errorMessage() {
+                    return _errorMessage2;
+                },
+                clearError: function clearError() {
+                    return _errorMessage2 = "";
+                }
+
+            });
         }
     };
 });
@@ -847,7 +1020,7 @@ app.controller('HomeScreen', function ($element, $timeout, API, $scope) {
     _.extend($scope, {});
 });
 
-app.controller('RegisterScreen', function ($element, $timeout, API, $scope) {
+app.controller('LoginScreen', function ($element, $timeout, API, $scope) {
 
     var init = function init() {
         $timeout(function () {
@@ -860,7 +1033,7 @@ app.controller('RegisterScreen', function ($element, $timeout, API, $scope) {
     _.extend($scope, {});
 });
 
-app.controller('LoginScreen', function ($element, $timeout, API, $scope) {
+app.controller('RegisterScreen', function ($element, $timeout, API, $scope) {
 
     var init = function init() {
         $timeout(function () {

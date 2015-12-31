@@ -1,23 +1,27 @@
 <script type="text/ng-template" id="register.html">
     <div template="register">
         <div class="register">
+            <div class="register-title" style="margin-top: -350px;">Create Account</div>
             <div class="register-box">
-                <div class="register-header">WLL.space</div>
+                <!--<div class="register-header">Welcome</div>-->
 
-                <div class="register-label">Email</div>
-                <input class="register-input" placeholder="Email"/>
+                <div class="register-label">First Name *</div>
+                <input class="register-input" ng-model="name" ng-change="clearError()" ng-enter="register(name, email, password)" autofocus/>
 
-                <div class="register-label">Password</div>
-                <input type="password" class="register-input" placeholder="Password"/>
+                <div class="register-label">Email *</div>
+                <input type="email" class="register-input" ng-model="email" ng-change="clearError()" ng-enter="register(name, email, password)"/>
 
-                <p>Forgot your password</p>
+                <div class="register-label">Password *</div>
+                <input type="password" class="register-input" ng-model="password" ng-change="clearError()" ng-enter="register(name, email, password)"/>
+
+                <div class="register-hr" ng-show="errorMessage()"></div>
+                <p ng-show="errorMessage()">{{errorMessage()}}</p>
                 <div class="register-hr"></div>
-                <div class="butn" ui-sref="home">register</div>
+                <div class="butn" ng-click="register(name, email, password)">Register &nbsp; <i class="fa fa-check"></i> </div>
                 <div class="register-hr"></div>
-                <div class="register-butns">
-                    <div class="butn secondary">Create Account</div>
-                    <div class="butn secondary">Learn More</div>
-                </div>
+                    <div class="butn secondary" ui-sref="login">
+                        Back &nbsp; <i class="fa fa-times"></i>
+                    </div>
             </div>
 
 
