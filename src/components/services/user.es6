@@ -1,8 +1,9 @@
 app.factory('User', ($rootScope, $sce, $state, $timeout) => {
 
     var user = {
-        _id: '',
-        name: ''
+        _id: localStorage.getItem('email'),
+        name: localStorage.getItem('name'),
+        email: localStorage.getItem('email')
     };
 
     var setGuest = () => {
@@ -17,6 +18,7 @@ app.factory('User', ($rootScope, $sce, $state, $timeout) => {
             _id: '',
             name: ''
         };
+        localStorage.clear();
     };
 
     var checkUser = (userDetails) => {
@@ -43,6 +45,7 @@ app.factory('User', ($rootScope, $sce, $state, $timeout) => {
             $rootScope.$apply();
             $state.go('home');
             localStorage.setItem('email', data.email);
+            localStorage.setItem('name', data.name);
         });
     };
 

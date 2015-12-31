@@ -372,8 +372,9 @@ app.factory('State', function ($rootScope, $sce, $state, $timeout, User) {
 app.factory('User', function ($rootScope, $sce, $state, $timeout) {
 
     var user = {
-        _id: '',
-        name: ''
+        _id: localStorage.getItem('email'),
+        name: localStorage.getItem('name'),
+        email: localStorage.getItem('email')
     };
 
     var setGuest = function setGuest() {
@@ -388,6 +389,7 @@ app.factory('User', function ($rootScope, $sce, $state, $timeout) {
             _id: '',
             name: ''
         };
+        localStorage.clear();
     };
 
     var checkUser = function checkUser(userDetails) {
@@ -414,6 +416,7 @@ app.factory('User', function ($rootScope, $sce, $state, $timeout) {
             $rootScope.$apply();
             $state.go('home');
             localStorage.setItem('email', data.email);
+            localStorage.setItem('name', data.name);
         });
     };
 
@@ -567,6 +570,49 @@ app.directive('headerItem', function (State, $state, User) {
     };
 });
 
+app.directive('loginItem', function (State, $state, $timeout, User, $rootScope) {
+    return {
+        templateUrl: 'login.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+            var _errorMessage = "";
+
+            var setGuest = function setGuest() {
+                User.setGuest();
+                $state.go('home');
+            };
+
+            var events = function events() {
+                socket.on('invalid-login', function () {
+                    console.log('invalid-login');
+                    _errorMessage = "The email and / or password is incorrect";
+                    $rootScope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+                scope.email = localStorage.getItem('email');
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                setGuest: setGuest,
+                checkUser: User.checkUser,
+                errorMessage: function errorMessage() {
+                    return _errorMessage;
+                },
+                clearError: function clearError() {
+                    return _errorMessage = "";
+                }
+            });
+        }
+    };
+});
+
 app.directive('menuItem', function (State, $state, User) {
     return {
         templateUrl: 'menu.html',
@@ -617,49 +663,6 @@ app.directive('menuItem', function (State, $state, User) {
                     return shrink;
                 },
                 logout: logout
-            });
-        }
-    };
-});
-
-app.directive('loginItem', function (State, $state, $timeout, User, $rootScope) {
-    return {
-        templateUrl: 'login.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-            var _errorMessage = "";
-
-            var setGuest = function setGuest() {
-                User.setGuest();
-                $state.go('home');
-            };
-
-            var events = function events() {
-                socket.on('invalid-login', function () {
-                    console.log('invalid-login');
-                    _errorMessage = "The email and / or password is incorrect";
-                    $rootScope.$apply();
-                });
-            };
-
-            var init = function init() {
-                events();
-                scope.email = localStorage.getItem('email');
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                setGuest: setGuest,
-                checkUser: User.checkUser,
-                errorMessage: function errorMessage() {
-                    return _errorMessage;
-                },
-                clearError: function clearError() {
-                    return _errorMessage = "";
-                }
             });
         }
     };
