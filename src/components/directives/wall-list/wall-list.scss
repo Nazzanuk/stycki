@@ -4,12 +4,13 @@
   flex-direction: column;
   padding: 15px;
   background: $off-white;
+  overflow-y: auto;
 
   .wall-list {
     flex-direction: row;
     flex-wrap: wrap;
     display: flex;
-    margin: -15px;
+    margin: -15px -15px 0;
 
     .wall {
       display: flex;

@@ -11,6 +11,8 @@
     background: $light-grey;
     transition: .2s;
     overflow: hidden;
+    max-height: calc(100vh - 65px);
+    overflow-y: hidden;
 
     .shrink-button {
       position: absolute;
@@ -40,6 +42,14 @@
       .menu-item {
         opacity: 0;
       }
+    }
+
+    .menu-items {
+      overflow-y: scroll;
+      height: calc(100% - 80px);
+      /* margin-bottom: 50px; */
+      position: absolute;
+      width: 220px;
     }
 
     .menu-item {

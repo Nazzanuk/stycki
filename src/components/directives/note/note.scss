@@ -26,7 +26,7 @@
 
     &.deleted {
       //visibility: hidden;
-      transform: scale(01.1) translateY(-30px)  !important;
+      transform: scale(01.1) translateY(-30px) !important;
       opacity: 0;
     }
 
@@ -34,6 +34,76 @@
 
     }
 
+    .note-profile {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      overflow: hidden;
+
+      bottom: 5px;
+      left: -10px;
+      border-radius: 200px;
+      margin: 5px -15px 0 16px;
+      //border: 1px solid white;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      transition: .2s;
+      cursor: pointer;
+      background: white;
+      transform: rotate(0deg) scale(0.1) translateY(20px);
+      opacity: 0;
+      visibility: hidden;
+
+      object {
+        pointer-events: none;
+      }
+
+      &.active {
+        visibility: visible;
+        opacity: 1;
+        transform: rotate(365deg) scale(1);
+      }
+
+      &:hover {
+        transform: scale(3);
+      }
+    }
+
+    .note-link {
+      position: absolute;
+      width: 30px;
+      line-height: 30px;
+      overflow: hidden;
+
+      bottom: 5px;
+      right: 20px;
+      border-radius: 200px;
+      margin: 5px -15px 0 16px;
+      //border: 1px solid white;
+      //border: 1px solid rgba(0, 0, 0, 0.1);
+      transition: .2s;
+      cursor: pointer;
+      //background: white;
+      transform: rotate(0deg) scale(0.1) translateY(20px);
+      opacity: 0;
+      visibility: hidden;
+
+      a {
+        line-height: inherit;
+        width: inherit;
+        text-align: center;
+        color: inherit;
+      }
+
+      &.active {
+        visibility: visible;
+        opacity: 1;
+        transform: rotate(365deg) scale(1);
+      }
+
+      &:hover {
+        transform: scale(3);
+      }
+    }
 
     .note-box {
       position: relative;
@@ -127,12 +197,63 @@
   }
 }
 
-.shadow
-{
+.note-menu {
+  position: absolute;
+  background: white;
+  margin-top: 20px;
+  z-index: 900;
+  transition: .2s;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+
+  .menu-item {
+    background: white;
+    line-height: 30px;
+    padding: 0 10px;
+    border-bottom: 1px solid $light-grey;
+    color: $body;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: left;
+    transition: .2s;
+    white-space: nowrap;
+
+    .menu-icon {
+      overflow: hidden;
+      height: 25px;
+      width: 25px;
+      /* margin: 5px; */
+      border-radius: 50px;
+      top: -2px;
+      position: relative;
+      margin-right: 5px;
+      display: inline-block;
+      margin-bottom: -5px;
+      //border: 1px solid #ddd;
+      cursor: pointer;
+      pointer-events: none;
+    }
+
+    &:hover {
+      background: $off-white;
+      transform: scale(1.3);
+    }
+  }
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+.shadow {
   position: relative;
 }
-.shadow:before, .shadow:after
-{
+
+.shadow:before, .shadow:after {
   z-index: -1;
   position: absolute;
   content: "";
@@ -140,12 +261,12 @@
   left: 5px;
   width: 50%;
   top: 80%;
-  max-width:300px;
+  max-width: 300px;
   box-shadow: 0 15px 10px rgba(0, 0, 0, 0.2);
   transform: rotate(-7deg);
 }
-.shadow:after
-{
+
+.shadow:after {
   transform: rotate(7deg);
   right: 5px;
   left: auto;

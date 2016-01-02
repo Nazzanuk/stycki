@@ -1,5 +1,41 @@
 app.factory('Wall', (State, $rootScope) => {
-    var notes = [], color = 1, wall = {};
+    var notes = [], color = 1, wall = {}, scale = 1, users = [
+        {
+            _id:'guest',
+            name:'Nathan',
+            img:'/public/img/black-male.svg'
+        },
+        {
+            _id:'12345',
+            name:'Louis',
+            img:'/public/img/white-male.svg'
+        },
+        {
+            _id:'123456',
+            name:'Mike',
+            img:'/public/img/white-male-2.svg'
+        },
+        {
+            _id:'sadsadsadcsas',
+            name:'Mel',
+            img:'/public/img/black-male-2.svg'
+        },
+        {
+            _id:'sdnajfonojw',
+            name:'Holly',
+            img:'/public/img/white-female.svg'
+        },
+        {
+            _id:'nsdjfnj',
+            name:'Jas',
+            img:'/public/img/asian-male.svg'
+        },
+        {
+            _id:'ct7tgv8yy',
+            name:'Nosh',
+            img:'/public/img/asian-female.svg'
+        }
+    ];
 
     var addNote = (event, top = 100, left = 50) => {
 
@@ -17,6 +53,7 @@ app.factory('Wall', (State, $rootScope) => {
     };
 
     var setWall = (theWall) => {
+        scale = 1
         wall = theWall;
         notes = [];
         socket.emit('join-wall', wall._id);
@@ -42,10 +79,13 @@ app.factory('Wall', (State, $rootScope) => {
     init();
 
     return {
+        getScale: () => scale,
+        changeScale: (amount) => scale += amount,
         addNote,
         setWall,
         changeColor: (currentColor) => color = ++currentColor <= 5 ? currentColor : 1,
         getColor: () => color,
-        getNotes: () => notes
+        getNotes: () => notes,
+        getUsers: () => users
     };
 });

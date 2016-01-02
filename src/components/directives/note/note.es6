@@ -1,4 +1,4 @@
-app.directive('noteItem', (State, $state, Wall) => ({
+app.directive('noteItem', (State, $state, Wall, Dialog) => ({
     templateUrl: 'note.html',
     replace: true,
     scope: {
@@ -7,28 +7,67 @@ app.directive('noteItem', (State, $state, Wall) => ({
         text: '=',
         color: '=',
         top: '=',
-        left: '='
+        left: '=',
+        assignedUser: '=',
+        link: '=',
+        "zIndex": '='
     },
 
     link(scope, element, attrs) {
 
-        var position = {top: scope.top, left: scope.left}, text = scope.text,
+        var position = {top: scope.top, left: scope.left, "z-index": scope.zIndex},
+            text = scope.text, assignedUser = scope.assignedUser, link = scope.link,
             rotation = _.random(-5, 5);
 
+        var usersVisible = false, settingsVisible = false;
+
+        var click = {x: 0, y: 0};
+
+        var getTopZ = () => {
+            var z = 1;
+
+            $('.note').each(function () {
+                if ($(this).css('z-index') * 1 >= z) {
+                    z = ($(this).css('z-index') * 1) + 1;
+                }
+                console.log($(this).css('z-index'));
+            });
+
+            console.log("z", z);
+            return z;
+        };
+
         var setText = (event) => {
-            text = element.find('.note').text().trim();
+            text = element.find('.note-text').text().trim();
             saveNote();
         };
 
         var updateText = () => {
-            //text = element.find('.note').text().trim();
-            //console.log(element.find('.note').text().trim());
             updateNote();
+        };
+
+        var updateLink = () => {
+            Dialog.newDialog({
+                title: "Add Link",
+                message: "Enter the link below, or leave empty to remove the link.",
+                placeholder: "http://",
+                default: "",
+                callback: (response) => {
+                    link = response;
+                    updateNote();
+                }
+            })
+        };
+
+        var assignUser = (id) => {
+            assignedUser = id;
+            saveNote();
         };
 
         var getStyle = () => ({
             'top': position.top,
-            'left': position.left
+            'left': position.left,
+            'z-index': position["z-index"]
         });
 
         var setColor = () => {
@@ -40,10 +79,13 @@ app.directive('noteItem', (State, $state, Wall) => ({
         var getNote = () =>({
             _id: scope.id,
             color: scope.color,
-            text:  element.find('.note').text().trim(),
+            text: element.find('.note-text').text().trim(),
+            'z-index': position["z-index"],
             top: position.top,
             left: position.left,
-            wall: scope.wall
+            wall: scope.wall,
+            link,
+            assignedUser
         });
 
         var removeNote = () => {
@@ -65,6 +107,7 @@ app.directive('noteItem', (State, $state, Wall) => ({
                 scope.color = data.color;
                 position.top = data.top;
                 position.left = data.left;
+                position["z-index"] = data["z-index"];
                 text = data.text;
                 scope.$apply();
             });
@@ -74,14 +117,29 @@ app.directive('noteItem', (State, $state, Wall) => ({
             events();
             element.find('.note').draggable({
                 cancel: ".note-text",
-                stack: ".note",
+                //stack: ".note",
+                start(event, ui) {
+                    console.log('start', event.clientX, event.clientY);
+                    click.x = event.clientX;
+                    click.y = event.clientY;
+                    position['z-index'] = getTopZ();
+                    scope.$apply();
+                },
                 drag(event, ui) {
-                    position = ui.position;
+                    console.log(event.clientX, event.clientY);
+                    var original = ui.originalPosition;
+                    ui.position = {
+                        left: (event.clientX - click.x + original.left) / Wall.getScale(),
+                        top: (event.clientY - click.y + original.top ) / Wall.getScale()
+                    };
+
+
+                    position = _.extend(position, ui.position);
                     updateNote();
                     scope.$apply();
                 },
                 stop(event, ui) {
-                    position = ui.position;
+                    position = _.extend(position, ui.position);
                     saveNote();
                     scope.$apply();
                 }
@@ -101,7 +159,18 @@ app.directive('noteItem', (State, $state, Wall) => ({
             getStyle,
             setText,
             updateText,
-            getText: () => text
+            hideContext: () => (usersVisible = false, settingsVisible = false),
+            hello: () => assignedUser,
+            getAssignedUser: () => _.find(Wall.getUsers(), {_id: assignedUser}, '*'),
+            assignUser,
+            getUsers: Wall.getUsers,
+            showUsers: () => usersVisible = !usersVisible,
+            usersVisible: () => usersVisible,
+            showSettings: () => settingsVisible = !settingsVisible,
+            settingsVisible: () => settingsVisible,
+            getText: () => text,
+            updateLink,
+            getLink: () => link
         });
     }
 }));

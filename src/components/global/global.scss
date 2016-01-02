@@ -61,6 +61,8 @@ h1, h2 {
   flex: 1 0 auto;
   background: $off-white;
   position: relative;
+  max-height: calc(100vh - 65px);
+  overflow-y: hidden;
 }
 
 [screen] {

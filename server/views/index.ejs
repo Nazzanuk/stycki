@@ -81,7 +81,11 @@
         <div class="header">
             Stycki
 
-            <div class="pull-right">Hi {{getUser().name}} &nbsp; <i class="fa fa-user"></i></div>
+            <div class="pull-right">
+                Hi {{getUser().name}}
+
+                <object data="/public/img/black-male.svg" type="image/svg+xml" class="profile"></object>
+            </div>
         </div>
     </div>
 </script>
@@ -118,86 +122,58 @@
 <script type="text/ng-template" id="menu.html">
     <div template="menu">
         <div class="menu" ng-class="{'shrink': isShrunk()}">
-            <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
-                <i class="fa fa-home fa-fw"></i> &nbsp;
-                My Walls
-            </div>
-            <div class="sub-menu-item"
-                 ui-sref="wall({id:wall._id, name:wall.name})"
-                 ng-repeat="wall in getWalls() track by wall._id"
-                 ng-class="{'active':isWall(wall._id)}"
-            >
-                <!--<i class="fa fa-star fa-fw"></i> &nbsp;-->
-                <i class="fa fa-star"></i> &nbsp; #{{wall.name}}
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-info fa-fw"></i> &nbsp;
-                Tutorial
-                <em>
-                    <small><strong>
-                        <small>- Coming Soon</small>
-                    </strong></small>
-                </em>
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-cog fa-fw"></i> &nbsp;
-                Settings
-                <em>
-                    <small><strong>
-                        <small>- Coming Soon</small>
-                    </strong></small>
-                </em>
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-comment fa-fw"></i> &nbsp;
-                Feedback
-                <em>
-                    <small><strong>
-                        <small>- Coming Soon</small>
-                    </strong></small>
-                </em>
-            </div>
-            <div class="menu-item" ng-click="logout()">
-                <i class="fa fa-sign-out fa-fw"></i> &nbsp;
-                Logout
+
+            <div class="menu-items">
+
+                <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
+                    <i class="fa fa-home fa-fw"></i> &nbsp;
+                    My Walls
+                </div>
+                <div class="sub-menu-item"
+                     ui-sref="wall({id:wall._id, name:wall.name})"
+                     ng-repeat="wall in getWalls() track by wall._id"
+                     ng-class="{'active':isWall(wall._id)}"
+                >
+                    <!--<i class="fa fa-star fa-fw"></i> &nbsp;-->
+                    <i class="fa fa-star"></i> &nbsp; #{{wall.name}}
+                </div>
+                <div class="menu-item">
+                    <i class="fa fa-info fa-fw"></i> &nbsp;
+                    Tutorial
+                    <em>
+                        <small><strong>
+                            <small>- Coming Soon</small>
+                        </strong></small>
+                    </em>
+                </div>
+                <div class="menu-item">
+                    <i class="fa fa-cog fa-fw"></i> &nbsp;
+                    Settings
+                    <em>
+                        <small><strong>
+                            <small>- Coming Soon</small>
+                        </strong></small>
+                    </em>
+                </div>
+                <div class="menu-item">
+                    <i class="fa fa-comment fa-fw"></i> &nbsp;
+                    Feedback
+                    <em>
+                        <small><strong>
+                            <small>- Coming Soon</small>
+                        </strong></small>
+                    </em>
+                </div>
+                <div class="menu-item" ng-click="logout()">
+                    <i class="fa fa-sign-out fa-fw"></i> &nbsp;
+                    Logout
+                </div>
             </div>
 
 
             <div class="shrink-button" ng-click="shrinkMe()">
                 <i class="fa fa-chevron-left"></i>
             </div>
-        </div>
-    </div>
-</script>
-<script type="text/ng-template" id="note.html">
-    <div template="note">
-        <div class="note shadow deleted" style="{{getRotation()}}" ng-style="getStyle()">
-            <div class="note-box color-{{color}}">
-                <div class="note-header">
-                    <div class="header-icon pull-left" ng-click="setColor()">
-                        <i class="fa fa-circle"></i>
-                    </div>
-                    <div class="header-icon pull-left">
-                        <i class="fa fa-user"></i>
-                    </div>
-
-                    <div class="header-icon pull-right" ng-click="removeNote()">
-                        <i class="fa fa-times"></i>
-                    </div>
-
-                </div>
-                <div class="note-content">
-                    <div class="note-text" contenteditable
-                         ng-keyup="updateText($event)"
-                         ng-blur="setText($event)"
-                         ng-bind="getText()"
-                    ></div>
-                </div>
-            </div>
-
-
-
-
         </div>
     </div>
 </script>
@@ -232,6 +208,72 @@
         </div>
     </div>
 </script>
+<script type="text/ng-template" id="note.html">
+    <div template="note">
+        <div class="note shadow deleted" style="{{getRotation()}}" ng-style="getStyle()" ng-click="hideContext()" ng-mouseleave="hideContext()">
+            <div class="note-box color-{{color}}">
+                <div class="note-header">
+                    <div class="header-icon pull-left" ng-click="setColor()">
+                        <i class="fa fa-circle fa-fw"></i>
+                    </div>
+
+                    <div class="header-icon pull-left">
+                        <div class="note-menu" ng-class="{active:usersVisible()}">
+                            <div class="menu-item" ng-click="assignUser(undefined)">
+                                Unassign
+                            </div>
+                            <div class="menu-item"
+                                 ng-repeat="user in getUsers() track by user._id"
+                                 ng-click="assignUser(user._id)"
+                            >
+                                <img class="menu-icon" src="{{user.img}}" class="profile"/>
+                                {{user.name}}
+                            </div>
+                        </div>
+                        <i class="fa fa-user fa-fw" ng-click="showUsers();$event.stopPropagation()"></i>
+                    </div>
+
+                    <div class="header-icon pull-right" ng-click="removeNote()">
+                        <i class="fa fa-times fa-fw"></i>
+                    </div>
+
+                    <div class="header-icon pull-right">
+                        <div class="note-menu" ng-class="{active:settingsVisible()}">
+                            <div class="menu-item" ng-click="updateLink()">
+                                Set Link
+                            </div>
+                        </div>
+                        <i class="fa fa-cog fa-fw" ng-click="showSettings();$event.stopPropagation()"></i>
+                    </div>
+
+                </div>
+                <div class="note-content">
+                    <!--{{hello()}}-->
+                    <!--{{getAssignedUser()}}-->
+                    <!--{{getLink()}}-->
+                    <div class="note-text" contenteditable
+                         ng-keyup="updateText($event)"
+                         ng-blur="setText($event)"
+                         ng-bind="getText()"
+                    ></div>
+                </div>
+
+                <div class="note-profile" ng-class="{active:getAssignedUser()}" ng-click="showUsers();$event.stopPropagation()">
+                    <img ng-src="{{getAssignedUser().img}}" class="profile"/>
+                </div>
+
+                <div class="note-link" ng-class="{active:getLink()}">
+                    <a ng-href="{{getLink()}}" target="_blank">
+                        <i class="fa fa-external-link"></i>
+                    </a>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</script>
 <script type="text/ng-template" id="settings.html">
     <div template="settings">
         <div class="settings" ng-class="{active:active}">
@@ -259,18 +301,26 @@
             <div class="wall-menu">
                 <div class="menu-item add-note" ng-click="addNote($event)"><i class="fa fa-plus"></i></div>
                 <div class="menu-item"><i class="fa fa-info"></i></div>
+                <div class="menu-item" ng-click="changeScale(0.1)"><i class="fa fa-plus"></i></div>
+                <div class="menu-item" ng-click="changeScale(-0.1)"><i class="fa fa-minus"></i></div>
             </div>
 
-            <div class="wall-canvas" ng-click="addNote($event)">
-                <note-item ng-repeat="note in getNotes() track by note._id"
-                           id="note._id"
-                           wall="note.wall"
-                           color="note.color"
-                           top="note.top"
-                           left="note.left"
-                           text="note.text"
-                ></note-item>
+            <div class="wall-zoom" >
+                <div class="wall-canvas" ng-click="addNote($event)" ng-style="{'transform': 'scale(' + getScale() + ')', 'transform-origin' : getOrigin()}">
+                    <note-item ng-repeat="note in getNotes() track by note._id"
+                               id="note._id"
+                               wall="note.wall"
+                               color="note.color"
+                               top="note.top"
+                               left="note.left"
+                               text="note.text"
+                               z-index="note['z-index']"
+                               assigned-user="note.assignedUser"
+                               link="note.link"
+                    ></note-item>
+                </div>
             </div>
+
 
         </div>
     </div>
@@ -296,6 +346,12 @@
 
             <!--<h2 style="padding: 15px 0;">Private Walls</h2>-->
         </div>
+    </div>
+</script>
+<script type="text/ng-template" id="home-screen.html">
+    <div screen>
+        <wall-list-item></wall-list-item>
+
     </div>
 </script>
 <script type="text/ng-template" id="bootcamp-screen.html">
@@ -352,12 +408,6 @@
 
             </div>
         </div>
-
-    </div>
-</script>
-<script type="text/ng-template" id="home-screen.html">
-    <div screen>
-        <wall-list-item></wall-list-item>
 
     </div>
 </script>

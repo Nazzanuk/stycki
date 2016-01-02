@@ -1,48 +1,52 @@
 <script type="text/ng-template" id="menu.html">
     <div template="menu">
         <div class="menu" ng-class="{'shrink': isShrunk()}">
-            <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
-                <i class="fa fa-home fa-fw"></i> &nbsp;
-                My Walls
-            </div>
-            <div class="sub-menu-item"
-                 ui-sref="wall({id:wall._id, name:wall.name})"
-                 ng-repeat="wall in getWalls() track by wall._id"
-                 ng-class="{'active':isWall(wall._id)}"
-            >
-                <!--<i class="fa fa-star fa-fw"></i> &nbsp;-->
-                <i class="fa fa-star"></i> &nbsp; #{{wall.name}}
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-info fa-fw"></i> &nbsp;
-                Tutorial
-                <em>
-                    <small><strong>
-                        <small>- Coming Soon</small>
-                    </strong></small>
-                </em>
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-cog fa-fw"></i> &nbsp;
-                Settings
-                <em>
-                    <small><strong>
-                        <small>- Coming Soon</small>
-                    </strong></small>
-                </em>
-            </div>
-            <div class="menu-item">
-                <i class="fa fa-comment fa-fw"></i> &nbsp;
-                Feedback
-                <em>
-                    <small><strong>
-                        <small>- Coming Soon</small>
-                    </strong></small>
-                </em>
-            </div>
-            <div class="menu-item" ng-click="logout()">
-                <i class="fa fa-sign-out fa-fw"></i> &nbsp;
-                Logout
+
+            <div class="menu-items">
+
+                <div class="menu-item" ui-sref="home" ng-class="{'active':isScreen('home')}">
+                    <i class="fa fa-home fa-fw"></i> &nbsp;
+                    My Walls
+                </div>
+                <div class="sub-menu-item"
+                     ui-sref="wall({id:wall._id, name:wall.name})"
+                     ng-repeat="wall in getWalls() track by wall._id"
+                     ng-class="{'active':isWall(wall._id)}"
+                >
+                    <!--<i class="fa fa-star fa-fw"></i> &nbsp;-->
+                    <i class="fa fa-star"></i> &nbsp; #{{wall.name}}
+                </div>
+                <div class="menu-item">
+                    <i class="fa fa-info fa-fw"></i> &nbsp;
+                    Tutorial
+                    <em>
+                        <small><strong>
+                            <small>- Coming Soon</small>
+                        </strong></small>
+                    </em>
+                </div>
+                <div class="menu-item">
+                    <i class="fa fa-cog fa-fw"></i> &nbsp;
+                    Settings
+                    <em>
+                        <small><strong>
+                            <small>- Coming Soon</small>
+                        </strong></small>
+                    </em>
+                </div>
+                <div class="menu-item">
+                    <i class="fa fa-comment fa-fw"></i> &nbsp;
+                    Feedback
+                    <em>
+                        <small><strong>
+                            <small>- Coming Soon</small>
+                        </strong></small>
+                    </em>
+                </div>
+                <div class="menu-item" ng-click="logout()">
+                    <i class="fa fa-sign-out fa-fw"></i> &nbsp;
+                    Logout
+                </div>
             </div>
 
 

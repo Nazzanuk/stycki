@@ -1,30 +1,64 @@
 <script type="text/ng-template" id="note.html">
     <div template="note">
-        <div class="note shadow deleted" style="{{getRotation()}}" ng-style="getStyle()">
+        <div class="note shadow deleted" style="{{getRotation()}}" ng-style="getStyle()" ng-click="hideContext()" ng-mouseleave="hideContext()">
             <div class="note-box color-{{color}}">
                 <div class="note-header">
                     <div class="header-icon pull-left" ng-click="setColor()">
-                        <i class="fa fa-circle"></i>
+                        <i class="fa fa-circle fa-fw"></i>
                     </div>
+
                     <div class="header-icon pull-left">
-                        <i class="fa fa-user"></i>
+                        <div class="note-menu" ng-class="{active:usersVisible()}">
+                            <div class="menu-item" ng-click="assignUser(undefined)">
+                                Unassign
+                            </div>
+                            <div class="menu-item"
+                                 ng-repeat="user in getUsers() track by user._id"
+                                 ng-click="assignUser(user._id)"
+                            >
+                                <img class="menu-icon" src="{{user.img}}" class="profile"/>
+                                {{user.name}}
+                            </div>
+                        </div>
+                        <i class="fa fa-user fa-fw" ng-click="showUsers();$event.stopPropagation()"></i>
                     </div>
 
                     <div class="header-icon pull-right" ng-click="removeNote()">
-                        <i class="fa fa-times"></i>
+                        <i class="fa fa-times fa-fw"></i>
+                    </div>
+
+                    <div class="header-icon pull-right">
+                        <div class="note-menu" ng-class="{active:settingsVisible()}">
+                            <div class="menu-item" ng-click="updateLink()">
+                                Set Link
+                            </div>
+                        </div>
+                        <i class="fa fa-cog fa-fw" ng-click="showSettings();$event.stopPropagation()"></i>
                     </div>
 
                 </div>
                 <div class="note-content">
+                    <!--{{hello()}}-->
+                    <!--{{getAssignedUser()}}-->
+                    <!--{{getLink()}}-->
                     <div class="note-text" contenteditable
                          ng-keyup="updateText($event)"
                          ng-blur="setText($event)"
                          ng-bind="getText()"
                     ></div>
                 </div>
+
+                <div class="note-profile" ng-class="{active:getAssignedUser()}" ng-click="showUsers();$event.stopPropagation()">
+                    <img ng-src="{{getAssignedUser().img}}" class="profile"/>
+                </div>
+
+                <div class="note-link" ng-class="{active:getLink()}">
+                    <a ng-href="{{getLink()}}" target="_blank">
+                        <i class="fa fa-external-link"></i>
+                    </a>
+
+                </div>
             </div>
-
-
 
 
         </div>

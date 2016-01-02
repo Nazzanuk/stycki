@@ -1,6 +1,7 @@
 [template=header] {
   flex-direction: column;
   flex: 0 0 65px;
+
   .header {
     flex: 1;
     line-height: 65px;
@@ -17,6 +18,17 @@
 
     .fa {
       line-height: 1;
+    }
+
+    .profile {
+      float: right;
+      height: 55px;
+      width: 55px;
+      border-radius: 200px;
+      margin: 5px -15px 0 16px;
+      border: 1px solid white;
+      background: white;
+      //border: 3px solid darken($primary, 25%);
     }
   }
 }

@@ -37,6 +37,10 @@ app.factory('User', ($rootScope, $sce, $state, $timeout) => {
         socket.emit('add-user', user);
     };
 
+    var updateUser = (userDetails) => {
+        socket.emit('update-user', userDetails);
+    };
+
     var events = () => {
         socket.on('valid-user', (data) => {
             console.log('valid-user', data);
@@ -60,6 +64,7 @@ app.factory('User', ($rootScope, $sce, $state, $timeout) => {
         clearUser,
         setGuest,
         checkUser,
+        updateUser,
         getUser: () => user
     };
 });
