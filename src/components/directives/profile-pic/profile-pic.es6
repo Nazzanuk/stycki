@@ -15,12 +15,14 @@ app.directive('profilePicItem', (State, $state, User) => ({
             '/public/img/asian-male.svg',
             '/public/img/white-male.svg',
             '/public/img/white-male-2.svg',
+            '/public/img/white-male-3.svg',
             '/public/img/black-female.svg',
             '/public/img/asian-female.svg',
             '/public/img/asian-female-2.svg',
             '/public/img/white-female.svg',
             '/public/img/white-female-2.svg',
-            '/public/img/white-female-3.svg'
+            '/public/img/white-female-3.svg',
+            '/public/img/white-female-4.svg'
         ];
 
         var selectAvatar = (img) => {
