@@ -28,6 +28,7 @@ app.directive('headerItem', (State, $state, User) => ({
             isMenuVisible: () => menuVisible,
             toggleMenu: State.toggleMenu,
             getTitle: State.getTitle,
+            showAvatars: State.showAvatars,
             getUser: User.getUser
         });
     }

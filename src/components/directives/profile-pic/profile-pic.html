@@ -1,0 +1,10 @@
+<script type="text/ng-template" id="profile-pic.html">
+    <div template="profile-pic">
+        <div class="profile-pic" ng-class="{active:isVisible()}" ng-click="close();">
+            <div class="profile-pic-box" ng-click="selectAvatar(avatar)" ng-repeat="avatar in getAvatars() track by $index">
+                <img ng-src="{{avatar}}" alt="">
+            </div>
+
+        </div>
+    </div>
+</script>

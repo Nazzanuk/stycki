@@ -1,6 +1,6 @@
 app.factory('State', ($rootScope, $sce, $state, $timeout, User) => {
 
-    var title = 'Content Types', showSplash = true, showUnder = true;
+    var title = 'Content Types', showSplash = true, showUnder = true, showAvatars = false;
 
     var gen_id = () => {
         var s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -41,6 +41,9 @@ app.factory('State', ($rootScope, $sce, $state, $timeout, User) => {
     return {
         isMenuVisible: '',
         toggleMenu: '',
+        showAvatars: () => showAvatars = true,
+        hideAvatars: () => showAvatars = false,
+        avatarsVisible: () => showAvatars,
         setTitle: text => title = text,
         getTitle: () => title,
         gen_id

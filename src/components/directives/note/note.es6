@@ -1,4 +1,4 @@
-app.directive('noteItem', (State, $state, Wall, Dialog) => ({
+app.directive('noteItem', (State, $state, Wall, Dialog, $timeout) => ({
     templateUrl: 'note.html',
     replace: true,
     scope: {
@@ -14,6 +14,7 @@ app.directive('noteItem', (State, $state, Wall, Dialog) => ({
     },
 
     link(scope, element, attrs) {
+        var $canvas = $('.wall-canvas');
 
         var position = {top: scope.top, left: scope.left, "z-index": scope.zIndex},
             text = scope.text, assignedUser = scope.assignedUser, link = scope.link,
@@ -124,6 +125,7 @@ app.directive('noteItem', (State, $state, Wall, Dialog) => ({
                     click.y = event.clientY;
                     position['z-index'] = getTopZ();
                     scope.$apply();
+                    $canvas.addClass('dragged');
                 },
                 drag(event, ui) {
                     console.log(event.clientX, event.clientY);
@@ -142,6 +144,7 @@ app.directive('noteItem', (State, $state, Wall, Dialog) => ({
                     position = _.extend(position, ui.position);
                     saveNote();
                     scope.$apply();
+                    $timeout(() => $canvas.removeClass('dragged'), 1);
                 }
             });
 

@@ -91,7 +91,12 @@ gulp.task('gen-lib-js', () =>
 );
 
 gulp.task('gen-lib-css', () =>
-    gulp.src(['src/bower-components/bootstrap/dist/css/bootstrap.min.css'])
+    gulp.src([
+        'src/bower-components/bootstrap/dist/css/bootstrap.min.css',
+        'src/bower-components/jquery-ui/themes/base/resizeable.css',
+        'src/bower-components/jquery-ui/themes/base/draggable.css',
+        'src/bower-components/jquery-ui/themes/base/all.css'
+    ])
         .pipe(concat('lib.css'))
         .pipe(gulp.dest("release/public"))
 );

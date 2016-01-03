@@ -19,6 +19,7 @@ module.exports = {
                 socket.join(wall_id);
 
                 Mongo.findDocuments('notes', {wall: wall_id}, {}, (notes) => io.to(wall_id).emit('notes', notes));
+                Mongo.findDocuments('sections', {wall: wall_id}, {}, (sections) => io.to(wall_id).emit('sections', sections));
             });
 
             socket.on('add-user', (user) => {
@@ -54,6 +55,12 @@ module.exports = {
                 Mongo.findDocuments('walls', {}, {}, (walls) => socket.emit('wall-list', walls));
             });
 
+            socket.on('remove-wall', (wall) => {
+                Mongo.removeDocument('walls', {_id: wall._id}, () => {
+                    Mongo.findDocuments('walls', {}, {}, (walls) => socket.emit('wall-list', walls));
+                });
+            });
+
             socket.on('add-note', (note) => {
                 Mongo.insertDocument('notes', note, () => {
                     Mongo.findDocuments('notes', {wall: note.wall}, {}, (notes) => io.to(note.wall).emit('notes', notes));
@@ -66,18 +73,32 @@ module.exports = {
                 });
             });
 
-            socket.on('remove-wall', (wall) => {
-                Mongo.removeDocument('walls', {_id: wall._id}, () => {
-                    Mongo.findDocuments('walls', {}, {}, (walls) => socket.emit('wall-list', walls));
-                });
-            });
-
             socket.on('update-note', (note) => {
                 socket.broadcast.to(note.wall).emit('note-' + note._id, note);
             });
 
             socket.on('save-note', (note) => {
                 Mongo.updateDocument('notes', {_id: note._id}, note, (notes) => socket.broadcast.to(note.wall).emit('note-' + note._id, note));
+            });
+
+            socket.on('add-section', (section) => {
+                Mongo.insertDocument('sections', section, () => {
+                    Mongo.findDocuments('sections', {wall: section.wall}, {}, (sections) => io.to(section.wall).emit('sections', sections));
+                });
+            });
+
+            socket.on('remove-section', (section) => {
+                Mongo.removeDocument('sections', {_id: section._id}, () => {
+                    Mongo.findDocuments('sections', {wall: section.wall}, {}, (sections) => io.to(section.wall).emit('sections', sections));
+                });
+            });
+
+            socket.on('update-section', (section) => {
+                socket.broadcast.to(section.wall).emit('section-' + section._id, section);
+            });
+
+            socket.on('save-section', (section) => {
+                Mongo.updateDocument('sections', {_id: section._id}, section, (sections) => socket.broadcast.to(section.wall).emit('section-' + section._id, section));
             });
         });
 

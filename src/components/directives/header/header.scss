@@ -28,7 +28,16 @@
       margin: 5px -15px 0 16px;
       border: 1px solid white;
       background: white;
+      cursor: pointer;
       //border: 3px solid darken($primary, 25%);
+      transition: .2s;
+
+
+
+
+      &:hover {
+        transform: rotate(5deg) scale(1.1);
+      }
     }
   }
 }

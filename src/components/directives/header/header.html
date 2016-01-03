@@ -6,7 +6,7 @@
             <div class="pull-right">
                 Hi {{getUser().name}}
 
-                <object data="/public/img/black-male.svg" type="image/svg+xml" class="profile"></object>
+                <img class="profile" ng-src="{{getUser().img}}" ng-click="showAvatars()" />
             </div>
         </div>
     </div>

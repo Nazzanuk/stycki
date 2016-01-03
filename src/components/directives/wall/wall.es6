@@ -16,7 +16,7 @@ app.directive('wallItem', (State, $state, Wall, $timeout) => ({
             y: 0
         };
 
-        var multiplier = ($('.wall-canvas').height() / 2) -($('.wall-canvas').height() / 2) * Wall.getScale();
+        var multiplier = ($('.wall-canvas').height() / 2) - ($('.wall-canvas').height() / 2) * Wall.getScale();
 
         var getOrigin = () => {
             var x = 0, y = 0;
@@ -29,7 +29,7 @@ app.directive('wallItem', (State, $state, Wall, $timeout) => ({
 
         var init = () => {
             $wall.draggable({
-                cancel: ".note",
+                cancel: ".note, .section",
                 start: (event, ui) => {
                     console.log('start', event.clientX, event.clientY);
                     //multiplier = ($('.wall-canvas').height() / 2) -($('.wall-canvas').height() / 2) * Wall.getScale();
@@ -44,19 +44,20 @@ app.directive('wallItem', (State, $state, Wall, $timeout) => ({
                     var original = ui.originalPosition;
                     ui.position = {
                         left: (event.clientX - click.x + original.left),
-                        top:  (event.clientY - click.y + original.top )
+                        top: (event.clientY - click.y + original.top )
                     };
                     scope.$apply();
                     //console.log(ui.position.left, ui.position.top);
                 },
                 stop: (event, ui) => {
-                    $timeout(() => $canvas.removeClass('dragged'), 1)
+                    $timeout(() => $canvas.removeClass('dragged'), 1);
                     var original = ui.originalPosition;
                     ui.position = {
                         left: (event.clientX - click.x + original.left) / Wall.getScale(),
-                        top:  (event.clientY - click.y + original.top ) / Wall.getScale()
+                        top: (event.clientY - click.y + original.top ) / Wall.getScale()
                     };
                     scope.$apply();
+                    $(event.toElement).one('click', (e) => e.stopImmediatePropagation());
                 }
             });
 
@@ -67,12 +68,21 @@ app.directive('wallItem', (State, $state, Wall, $timeout) => ({
 
         scope = _.extend(scope, {
             getOrigin,
-            showSettings:() => settingsActive,
-            toggleSettings:() => settingsActive = !settingsActive,
+            showSettings: () => settingsActive,
+            toggleSettings: () => settingsActive = !settingsActive,
             addNote: Wall.addNote,
+            addSection: Wall.addSection,
             getNotes: Wall.getNotes,
+            getSections: Wall.getSections,
             getScale: Wall.getScale,
-            changeScale: Wall.changeScale
+            changeScale: Wall.changeScale,
+            tryMe: (event) => {
+                console.log('tryMe', event)
+                event.stopImmediatePropagation();
+                event.stopPropagation();
+                return false;
+                if (event.currentTarget.className != event.target.className) return false;
+            }
         });
     }
 }));

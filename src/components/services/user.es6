@@ -3,7 +3,8 @@ app.factory('User', ($rootScope, $sce, $state, $timeout) => {
     var user = {
         _id: localStorage.getItem('email'),
         name: localStorage.getItem('name'),
-        email: localStorage.getItem('email')
+        email: localStorage.getItem('email'),
+        img: localStorage.getItem('img')
     };
 
     var setGuest = () => {
@@ -38,6 +39,8 @@ app.factory('User', ($rootScope, $sce, $state, $timeout) => {
     };
 
     var updateUser = (userDetails) => {
+        user = _.extend(user, userDetails);
+        localStorage.setItem('img', userDetails.img);
         socket.emit('update-user', userDetails);
     };
 
@@ -50,6 +53,7 @@ app.factory('User', ($rootScope, $sce, $state, $timeout) => {
             $state.go('home');
             localStorage.setItem('email', data.email);
             localStorage.setItem('name', data.name);
+            localStorage.setItem('img', data.img);
         });
     };
 

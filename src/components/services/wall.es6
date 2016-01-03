@@ -1,9 +1,9 @@
 app.factory('Wall', (State, $rootScope) => {
-    var notes = [], color = 1, wall = {}, scale = 1, users = [
+    var notes = [], sections = [], color = 1, wall = {}, scale = 1, users = [
         {
             _id:'guest',
             name:'Nathan',
-            img:'/public/img/black-male.svg'
+            img:'/public/img/black-male-4.svg'
         },
         {
             _id:'12345',
@@ -40,6 +40,7 @@ app.factory('Wall', (State, $rootScope) => {
     var addNote = (event, top = 100, left = 50) => {
 
         var _id = State.gen_id();
+        console.log('hello', event)
         if (event.currentTarget.className != event.target.className) return;
         if ($(event.currentTarget).hasClass('dragged')) return;
 
@@ -52,16 +53,43 @@ app.factory('Wall', (State, $rootScope) => {
         socket.emit('add-note', {_id, color, top, left, wall: wall._id});
     };
 
+
+    var addSection = (event, top = 100 + ($('.wall-zoom').position().top * -1), left = (50 + $('.wall-zoom').position().left * -1)) => {
+
+        console.log('new section', top, left);
+
+        var _id = State.gen_id();
+        console.log('hello', event);
+        if (event.currentTarget.className != event.target.className) return;
+        if ($(event.currentTarget).hasClass('dragged')) return;
+
+        if ($(event.currentTarget).hasClass('wall-canvas')) {
+            top = event.offsetY;
+            left = event.offsetX;
+        }
+
+        var section = {_id, color, top, left, wall: wall._id, text:"Section"};
+
+        sections.push(section);
+        socket.emit('add-section', section);
+    };
+
     var setWall = (theWall) => {
-        scale = 1
+        scale = 1;
         wall = theWall;
         notes = [];
+        sections = [];
         socket.emit('join-wall', wall._id);
     };
 
     var events = () => {
         socket.on('notes', (data) => {
             notes = data;
+            $rootScope.$apply();
+        });
+
+        socket.on('sections', (data) => {
+            sections = data;
             $rootScope.$apply();
         });
     };
@@ -82,10 +110,12 @@ app.factory('Wall', (State, $rootScope) => {
         getScale: () => scale,
         changeScale: (amount) => scale += amount,
         addNote,
+        addSection,
         setWall,
         changeColor: (currentColor) => color = ++currentColor <= 5 ? currentColor : 1,
         getColor: () => color,
         getNotes: () => notes,
+        getSections: () => sections,
         getUsers: () => users
     };
 });

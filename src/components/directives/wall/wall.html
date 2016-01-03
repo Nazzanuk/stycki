@@ -12,10 +12,13 @@
             </div>
 
             <div class="wall-menu">
-                <div class="menu-item add-note" ng-click="addNote($event)"><i class="fa fa-plus"></i></div>
-                <div class="menu-item"><i class="fa fa-info"></i></div>
                 <div class="menu-item" ng-click="changeScale(0.1)"><i class="fa fa-plus"></i></div>
                 <div class="menu-item" ng-click="changeScale(-0.1)"><i class="fa fa-minus"></i></div>
+            </div>
+
+            <div class="wall-menu-2">
+                <!--<div class="menu-item add-note" ng-click="addNote($event)"><i class="fa fa-plus"></i></div>-->
+                <div class="menu-item" ng-click="addSection($event)"><i class="fa fa-square-o"></i></div>
             </div>
 
             <div class="wall-zoom" >
@@ -31,6 +34,17 @@
                                assigned-user="note.assignedUser"
                                link="note.link"
                     ></note-item>
+
+                    <section-item  ng-repeat="section in getSections() track by section._id"
+                                   id="section._id"
+                                   wall="section.wall"
+                                   color="section.color"
+                                   top="section.top"
+                                   left="section.left"
+                                   height="section.height"
+                                   width="section.width"
+                                   text="section.text"
+                    ></section-item>
                 </div>
             </div>
 

@@ -1,0 +1,103 @@
+[template=section] {
+  .section {
+    color: $body;
+    padding: 0px;
+    //box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.2);
+    //box-shadow: 0 0px 15px 0px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0px 0px 0px rgba(0, 0, 0, 0.0);
+    cursor: hand;
+    text-align: center;
+    position: absolute;
+    top: 100px;
+    left: 50px;
+    cursor: -webkit-grab;
+    cursor: grab;
+    //transition: transform .2s, background .2s, opacity .2s, visibility .2s;
+    z-index: 0;
+    font-size: 12px;
+    opacity: 1;
+
+    //position: relative;
+    width: 300px;
+    height: 300px;
+    background: transparentize(lighten($primary-2, 10%), 0.9);
+    background: transparentize(lighten(#bbb, 10%), 0.85);
+    border: 1px dashed transparentize(black, 0.85);
+    //transition: transform .2s;
+
+    transition: transform .2s, background .2s, opacity .2s, visibility .2s;
+    //display: flex;
+    //flex-direction: column;
+
+    &.ui-draggable-dragging {
+      transform: scale(1.05) rotate(2deg) !important;
+      cursor: -webkit-grab;
+      cursor: grab;
+      box-shadow: 0 0px 15px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    &.deleted {
+      //visibility: hidden;
+      transform: scale(01.1) translateY(-30px) !important;
+      opacity: 0;
+    }
+
+    &.droppable {
+      background: transparentize(lighten($primary, 10%), 0.7);
+      border: 1px dashed transparentize($primary, 0.7);
+    }
+
+    &.dropping {
+      background: transparentize(lighten($primary, 10%), 0.2);
+      border: 1px dashed transparentize($primary, 0.2);
+    }
+
+    .section-header {
+      flex: 0 0 auto;
+      height: 20px;
+      position: relative;
+      //background: rgba(0, 0, 0, 0.03);
+
+      .header-icon {
+        cursor: pointer;
+        color: rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        line-height: 20px;
+        height: 20px;
+        width: 20px;
+        text-align: center;
+        font-size: 12px;
+        transition: .2s;
+      }
+    }
+
+    &:hover {
+      .section-header {
+        .header-icon {
+          opacity: 1;
+        }
+      }
+    }
+
+    .section-title {
+      flex: 0 0 auto;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      margin: -50px 0px 0;
+      position: absolute;
+      width: 100%;
+      font-weight: 100;
+      font-size: 30px;
+      color: rgba(0,0,0,0.6);
+      border: none;
+      background: none;
+      left: 0;
+      outline: none;
+      padding: 0;
+      font-family: 'Kalam', cursive;
+    }
+
+
+  }
+}

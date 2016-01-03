@@ -1,0 +1,13 @@
+<script type="text/ng-template" id="section.html">
+    <div template="section">
+        <div class="section deleted" ng-style="getStyle()">
+            <div class="section-header">
+                <input class="section-title" value="To Do" ng-model="text" ng-change="updateText()" ng-blur="setText()"/>
+                <div class="header-icon pull-right" ng-click="removeSection()">
+                    <i class="fa fa-times"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</script>
