@@ -1,10 +1,10 @@
 [template=header] {
   flex-direction: column;
-  flex: 0 0 65px;
+  flex: 0 0 55px;
 
   .header {
     flex: 1;
-    line-height: 65px;
+    line-height: 55px;
     background: darken($primary, 20%);
     //background: linear-gradient(to left, darken($primary-2, 20%) 0%, darken($primary, 20%) 100%);
     color: white;
@@ -14,7 +14,7 @@
     z-index: 100;
     padding: 0 30px;
     font-weight: 100;
-    font-size: 25px;
+    font-size: 20px;
 
     .fa {
       line-height: 1;
@@ -22,8 +22,8 @@
 
     .profile {
       float: right;
-      height: 55px;
-      width: 55px;
+      height: 45px;
+      width: 45px;
       border-radius: 200px;
       margin: 5px -15px 0 16px;
       border: 1px solid white;

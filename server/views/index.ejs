@@ -62,6 +62,19 @@
 
     </div>
 </div>
+<script type="text/ng-template" id="header.html">
+    <div template="header">
+        <div class="header">
+            Stycki
+
+            <div class="pull-right">
+                Hi {{getUser().name}}
+
+                <img class="profile" ng-src="{{getUser().img}}" ng-click="showAvatars()" />
+            </div>
+        </div>
+    </div>
+</script>
 <script type="text/ng-template" id="dialog.html">
     <div template="dialog">
         <div class="dialog" ng-class="{active:isActive()}" ng-click="closeDialog();">
@@ -78,16 +91,33 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="header.html">
-    <div template="header">
-        <div class="header">
-            Stycki
+<script type="text/ng-template" id="login.html">
+    <div template="login">
+        <div class="login">
+            <div class="login-title">Stycki</div>
+            <div class="login-box">
+                <!--<div class="login-header">Welcome</div>-->
 
-            <div class="pull-right">
-                Hi {{getUser().name}}
+                <div class="login-label">Email</div>
+                <input class="login-input" ng-model="email" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})" autofocus/>
 
-                <img class="profile" ng-src="{{getUser().img}}" ng-click="showAvatars()" />
+                <div class="login-label">Password</div>
+                <input type="password" class="login-input" ng-model="password" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})"/>
+
+                <p ng-show="errorMessage()">{{errorMessage()}}</p>
+                <div class="login-hr" ng-show="errorMessage()"></div>
+                <p>Forgot your password?</p>
+                <div class="login-hr"></div>
+                <div class="butn" ng-click="checkUser({email:email, password:password})">Login &nbsp; <i class="fa fa-check"></i></div>
+                <div class="login-hr"></div>
+                <div class="login-butns">
+                    <div class="butn secondary" ui-sref="register">Create Account &nbsp; <i class="fa fa-user-plus"></i></div>
+                    <div class="butn secondary" ng-click="setGuest()">Guest &nbsp; <i class="fa fa-smile-o"></i></div>
+                </div>
             </div>
+
+
+
         </div>
     </div>
 </script>
@@ -149,40 +179,10 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="login.html">
-    <div template="login">
-        <div class="login">
-            <div class="login-title">Stycki</div>
-            <div class="login-box">
-                <!--<div class="login-header">Welcome</div>-->
-
-                <div class="login-label">Email</div>
-                <input class="login-input" ng-model="email" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})" autofocus/>
-
-                <div class="login-label">Password</div>
-                <input type="password" class="login-input" ng-model="password" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})"/>
-
-                <p ng-show="errorMessage()">{{errorMessage()}}</p>
-                <div class="login-hr" ng-show="errorMessage()"></div>
-                <p>Forgot your password?</p>
-                <div class="login-hr"></div>
-                <div class="butn" ng-click="checkUser({email:email, password:password})">Login &nbsp; <i class="fa fa-check"></i></div>
-                <div class="login-hr"></div>
-                <div class="login-butns">
-                    <div class="butn secondary" ui-sref="register">Create Account &nbsp; <i class="fa fa-user-plus"></i></div>
-                    <div class="butn secondary" ng-click="setGuest()">Guest &nbsp; <i class="fa fa-smile-o"></i></div>
-                </div>
-            </div>
-
-
-
-        </div>
-    </div>
-</script>
 <script type="text/ng-template" id="note.html">
     <div template="note">
         <div class="note shadow deleted" style="{{getRotation()}}" ng-style="getStyle()" ng-click="hideContext()" ng-mouseleave="hideContext()">
-            <div class="note-box color-{{color}}">
+            <div class="note-box color-{{color}}" ng-style="getSize()">
                 <div class="note-header">
                     <div class="header-icon pull-left" ng-click="setColor()">
                         <i class="fa fa-circle fa-fw"></i>
@@ -229,15 +229,14 @@
                     ></div>
                 </div>
 
-                <div class="note-profile" ng-class="{active:getAssignedUser()}" ng-click="showUsers();$event.stopPropagation()">
-                    <img ng-src="{{getAssignedUser().img}}" class="profile"/>
-                </div>
-
                 <div class="note-link" ng-class="{active:getLink()}">
                     <a ng-href="{{getLink()}}" target="_blank">
                         <i class="fa fa-external-link"></i>
                     </a>
+                </div>
 
+                <div class="note-profile" ng-class="{active:getAssignedUser()}" ng-click="showUsers();$event.stopPropagation()">
+                    <img ng-src="{{getAssignedUser().img}}" class="profile"/>
                 </div>
             </div>
 
@@ -286,19 +285,6 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="section.html">
-    <div template="section">
-        <div class="section deleted" ng-style="getStyle()">
-            <div class="section-header">
-                <input class="section-title" value="To Do" ng-model="text" ng-change="updateText()" ng-blur="setText()"/>
-                <div class="header-icon pull-right" ng-click="removeSection()">
-                    <i class="fa fa-times"></i>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</script>
 <script type="text/ng-template" id="settings.html">
     <div template="settings">
         <div class="settings" ng-class="{active:active}">
@@ -341,7 +327,10 @@
                                color="note.color"
                                top="note.top"
                                left="note.left"
+                               height="note.height"
+                               width="note.width"
                                text="note.text"
+                               note-data="{{note}}"
                                z-index="note['z-index']"
                                assigned-user="note.assignedUser"
                                link="note.link"
@@ -362,6 +351,25 @@
 
 
         </div>
+    </div>
+</script>
+<script type="text/ng-template" id="section.html">
+    <div template="section">
+        <div class="section deleted" ng-style="getStyle()">
+            <div class="section-header">
+                <input class="section-title" value="To Do" ng-model="text" ng-change="updateText()" ng-blur="setText()"/>
+                <div class="header-icon pull-right" ng-click="removeSection()">
+                    <i class="fa fa-times"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="home-screen.html">
+    <div screen>
+        <wall-list-item></wall-list-item>
+
     </div>
 </script>
 <script type="text/ng-template" id="wall-list.html">
@@ -441,12 +449,6 @@
 
             </div>
         </div>
-
-    </div>
-</script>
-<script type="text/ng-template" id="home-screen.html">
-    <div screen>
-        <wall-list-item></wall-list-item>
 
     </div>
 </script>

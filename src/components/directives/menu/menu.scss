@@ -1,7 +1,7 @@
 [template=menu] {
   .menu {
-    flex: 0 0 250px;
-    width: 250px;
+    flex: 0 0 200px;
+    width: 200px;
     //background: white;
     //box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
     //margin-bottom: 5px;
@@ -29,10 +29,11 @@
     }
 
     &.shrink {
-      width: 60px;
-      flex: 0 0 60px;
+      width: 40px;
+      flex: 0 0 40px;
 
       .shrink-button {
+        margin-left: -10px;
         .fa {
           transform: rotate(180deg);
         }
@@ -49,7 +50,7 @@
       height: calc(100% - 80px);
       /* margin-bottom: 50px; */
       position: absolute;
-      width: 220px;
+      width: 170px;
     }
 
     .menu-item {

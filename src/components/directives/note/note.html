@@ -1,7 +1,7 @@
 <script type="text/ng-template" id="note.html">
     <div template="note">
         <div class="note shadow deleted" style="{{getRotation()}}" ng-style="getStyle()" ng-click="hideContext()" ng-mouseleave="hideContext()">
-            <div class="note-box color-{{color}}">
+            <div class="note-box color-{{color}}" ng-style="getSize()">
                 <div class="note-header">
                     <div class="header-icon pull-left" ng-click="setColor()">
                         <i class="fa fa-circle fa-fw"></i>
@@ -48,15 +48,14 @@
                     ></div>
                 </div>
 
-                <div class="note-profile" ng-class="{active:getAssignedUser()}" ng-click="showUsers();$event.stopPropagation()">
-                    <img ng-src="{{getAssignedUser().img}}" class="profile"/>
-                </div>
-
                 <div class="note-link" ng-class="{active:getLink()}">
                     <a ng-href="{{getLink()}}" target="_blank">
                         <i class="fa fa-external-link"></i>
                     </a>
+                </div>
 
+                <div class="note-profile" ng-class="{active:getAssignedUser()}" ng-click="showUsers();$event.stopPropagation()">
+                    <img ng-src="{{getAssignedUser().img}}" class="profile"/>
                 </div>
             </div>
 

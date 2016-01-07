@@ -32,7 +32,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   font-smoothing: antialiased;
   font-smooth: always;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -61,7 +61,7 @@ h1, h2 {
   flex: 1 0 auto;
   background: $off-white;
   position: relative;
-  max-height: calc(100vh - 65px);
+  max-height: calc(100vh - 55px);
   overflow-y: hidden;
 }
 

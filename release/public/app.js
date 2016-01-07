@@ -591,36 +591,6 @@ app.factory('Wall', function (State, $rootScope) {
     };
 });
 
-app.directive('dialogItem', function (State, $state, Wall, Dialog) {
-    return {
-        templateUrl: 'dialog.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var events = function events() {};
-
-            var init = function init() {
-                events();
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                getMessage: Dialog.getMessage,
-                getTitle: Dialog.getTitle,
-                submit: Dialog.submit,
-                isActive: Dialog.isActive,
-                getPlaceholder: Dialog.getPlaceholder,
-                content: Dialog.content,
-                closeDialog: Dialog.closeDialog,
-                newDialog: Dialog.newDialog
-            });
-        }
-    };
-});
-
 app.directive('headerItem', function (State, $state, User) {
     return {
         templateUrl: 'header.html',
@@ -659,6 +629,79 @@ app.directive('headerItem', function (State, $state, User) {
                 getTitle: State.getTitle,
                 showAvatars: State.showAvatars,
                 getUser: User.getUser
+            });
+        }
+    };
+});
+
+app.directive('dialogItem', function (State, $state, Wall, Dialog) {
+    return {
+        templateUrl: 'dialog.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var events = function events() {};
+
+            var init = function init() {
+                events();
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                getMessage: Dialog.getMessage,
+                getTitle: Dialog.getTitle,
+                submit: Dialog.submit,
+                isActive: Dialog.isActive,
+                getPlaceholder: Dialog.getPlaceholder,
+                content: Dialog.content,
+                closeDialog: Dialog.closeDialog,
+                newDialog: Dialog.newDialog
+            });
+        }
+    };
+});
+
+app.directive('loginItem', function (State, $state, $timeout, User, $rootScope) {
+    return {
+        templateUrl: 'login.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+            var _errorMessage = "";
+
+            var setGuest = function setGuest() {
+                User.setGuest();
+                $state.go('home');
+            };
+
+            var events = function events() {
+                socket.on('invalid-login', function () {
+                    console.log('invalid-login');
+                    _errorMessage = "The email and / or password is incorrect";
+                    $rootScope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+                scope.email = localStorage.getItem('email');
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                setGuest: setGuest,
+                checkUser: User.checkUser,
+                errorMessage: function errorMessage() {
+                    return _errorMessage;
+                },
+                clearError: function clearError() {
+                    return _errorMessage = "";
+                }
             });
         }
     };
@@ -719,49 +762,6 @@ app.directive('menuItem', function (State, $state, User) {
     };
 });
 
-app.directive('loginItem', function (State, $state, $timeout, User, $rootScope) {
-    return {
-        templateUrl: 'login.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-            var _errorMessage = "";
-
-            var setGuest = function setGuest() {
-                User.setGuest();
-                $state.go('home');
-            };
-
-            var events = function events() {
-                socket.on('invalid-login', function () {
-                    console.log('invalid-login');
-                    _errorMessage = "The email and / or password is incorrect";
-                    $rootScope.$apply();
-                });
-            };
-
-            var init = function init() {
-                events();
-                scope.email = localStorage.getItem('email');
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                setGuest: setGuest,
-                checkUser: User.checkUser,
-                errorMessage: function errorMessage() {
-                    return _errorMessage;
-                },
-                clearError: function clearError() {
-                    return _errorMessage = "";
-                }
-            });
-        }
-    };
-});
-
 app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
     return {
         templateUrl: 'note.html',
@@ -773,6 +773,8 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
             color: '=',
             top: '=',
             left: '=',
+            height: '=',
+            width: '=',
             assignedUser: '=',
             link: '=',
             "zIndex": '='
@@ -781,11 +783,13 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
         link: function link(scope, element, attrs) {
             var $canvas = $('.wall-canvas');
 
-            var position = { top: scope.top, left: scope.left, "z-index": scope.zIndex },
+            var position = { top: scope.top, left: scope.left, height: scope.height, width: scope.width, "z-index": scope.zIndex },
                 text = scope.text,
                 assignedUser = scope.assignedUser,
                 link = scope.link,
                 rotation = _.random(-5, 5);
+
+            //console.log(position);
 
             var _usersVisible = false,
                 _settingsVisible = false;
@@ -799,15 +803,15 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
                     if ($(this).css('z-index') * 1 >= z) {
                         z = $(this).css('z-index') * 1 + 1;
                     }
-                    console.log($(this).css('z-index'));
+                    //console.log($(this).css('z-index'));
                 });
 
-                console.log("z", z);
+                //console.log("z", z);
                 return z;
             };
 
             var setText = function setText(event) {
-                text = element.find('.note-text').text().trim();
+                text = element.find('.note-text').text();
                 saveNote();
             };
 
@@ -837,7 +841,16 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
                 return {
                     'top': position.top,
                     'left': position.left,
-                    'z-index': position["z-index"]
+                    'z-index': position["z-index"],
+                    'height': position.height,
+                    'width': position.width
+                };
+            };
+
+            var getSize = function getSize() {
+                return {
+                    'height': position.height,
+                    'width': position.width
                 };
             };
 
@@ -851,10 +864,12 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
                 return {
                     _id: scope.id,
                     color: scope.color,
-                    text: element.find('.note-text').text().trim(),
+                    text: element.find('.note-text').text(),
                     'z-index': position["z-index"],
                     top: position.top,
                     left: position.left,
+                    height: position.height,
+                    width: position.width,
                     wall: scope.wall,
                     link: link,
                     assignedUser: assignedUser
@@ -862,7 +877,7 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
             };
 
             var removeNote = function removeNote() {
-                console.log('removeNote', getNote());
+                //console.log('removeNote', getNote());
                 element.find('.note').addClass('deleted');
                 socket.emit('remove-note', getNote());
             };
@@ -880,6 +895,8 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
                     scope.color = data.color;
                     position.top = data.top;
                     position.left = data.left;
+                    position.height = data.height;
+                    position.width = data.width;
                     position["z-index"] = data["z-index"];
                     text = data.text;
                     scope.$apply();
@@ -892,7 +909,6 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
                     cancel: ".note-text",
                     //stack: ".note",
                     start: function start(event, ui) {
-                        console.log('start', event.clientX, event.clientY);
                         click.x = event.clientX;
                         click.y = event.clientY;
                         position['z-index'] = getTopZ();
@@ -900,7 +916,6 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
                         $canvas.addClass('dragged');
                     },
                     drag: function drag(event, ui) {
-                        console.log(event.clientX, event.clientY);
                         var original = ui.originalPosition;
                         ui.position = {
                             left: (event.clientX - click.x + original.left) / Wall.getScale(),
@@ -919,10 +934,34 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
                             return $canvas.removeClass('dragged');
                         }, 1);
                     }
+                }).resizable({
+                    maxHeight: 200,
+                    maxWidth: 200,
+                    minHeight: 75,
+                    minWidth: 90,
+                    start: function start(event, ui) {
+                        $canvas.addClass('dragged');
+                    },
+                    resize: function resize(event, ui) {
+                        position.height = ui.size.height;
+                        position.width = ui.size.width;
+                        updateNote();
+                        scope.$apply();
+                    },
+                    stop: function stop(event, ui) {
+                        position.height = ui.size.height;
+                        position.width = ui.size.width;
+                        saveNote();
+                        $timeout(function () {
+                            return $canvas.removeClass('dragged');
+                        }, 1);
+                    }
                 });
 
                 element.find('.note-text').focus();
                 element.find('.note').removeClass('deleted');
+
+                //console.log('getStyle', getStyle());
             };
 
             init();
@@ -937,6 +976,7 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
                     return 'transform:rotate(' + rotation + 'deg);-webkit-transform:rotate(' + rotation + 'deg);';
                 },
                 getStyle: getStyle,
+                getSize: getSize,
                 setText: setText,
                 updateText: updateText,
                 hideContext: function hideContext() {
@@ -951,13 +991,13 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
                 assignUser: assignUser,
                 getUsers: Wall.getUsers,
                 showUsers: function showUsers() {
-                    return _usersVisible = !_usersVisible;
+                    return _usersVisible = !_usersVisible, position['z-index'] = getTopZ();
                 },
                 usersVisible: function usersVisible() {
                     return _usersVisible;
                 },
                 showSettings: function showSettings() {
-                    return _settingsVisible = !_settingsVisible;
+                    return _settingsVisible = !_settingsVisible, position['z-index'] = getTopZ();
                 },
                 settingsVisible: function settingsVisible() {
                     return _settingsVisible;
@@ -1065,162 +1105,6 @@ app.directive('registerItem', function (State, $state, $timeout, User, $rootScop
                     return _errorMessage2 = "";
                 }
 
-            });
-        }
-    };
-});
-
-app.directive('sectionItem', function (State, $state, Wall, Dialog, $timeout) {
-    return {
-        templateUrl: 'section.html',
-        replace: true,
-        scope: {
-            id: '=',
-            wall: '=',
-            text: '=',
-            color: '=',
-            top: '=',
-            left: '=',
-            height: '=',
-            width: '='
-        },
-
-        link: function link(scope, element, attrs) {
-            var $canvas = $('.wall-canvas');
-
-            var position = { top: scope.top, left: scope.left, height: scope.height, width: scope.width };
-
-            var click = { x: 0, y: 0 };
-
-            var setText = function setText() {
-                saveSection();
-            };
-
-            var updateText = function updateText() {
-                updateSection();
-            };
-
-            var getStyle = function getStyle() {
-                return {
-                    'top': position.top,
-                    'left': position.left,
-                    'height': position.height,
-                    'width': position.width
-                };
-            };
-
-            var setColor = function setColor() {
-                Wall.changeColor(scope.color);
-                scope.color = Wall.getColor();
-                saveSection();
-            };
-
-            var getSection = function getSection() {
-                return {
-                    _id: scope.id,
-                    color: scope.color,
-                    height: position.height,
-                    width: position.width,
-                    top: position.top,
-                    left: position.left,
-                    text: scope.text,
-                    wall: scope.wall
-                };
-            };
-
-            var removeSection = function removeSection() {
-                console.log('removeSection', getSection());
-                element.find('.section').addClass('deleted');
-                socket.emit('remove-section', getSection());
-            };
-
-            var updateSection = function updateSection() {
-                socket.emit('update-section', getSection());
-            };
-
-            var saveSection = function saveSection() {
-                socket.emit('save-section', getSection());
-            };
-
-            var events = function events() {
-                socket.on('section-' + scope.id, function (data) {
-                    scope.color = data.color;
-                    position.top = data.top;
-                    position.left = data.left;
-                    position.height = data.height;
-                    position.width = data.width;
-                    scope.text = data.text;
-                    scope.$apply();
-                });
-            };
-
-            var init = function init() {
-                events();
-                element.find('.section').draggable({
-                    cancel: ".section-text, .section-title",
-                    start: function start(event, ui) {
-                        click.x = event.clientX;
-                        click.y = event.clientY;
-                        scope.$apply();
-                        $canvas.addClass('dragged');
-                    },
-                    drag: function drag(event, ui) {
-                        var original = ui.originalPosition;
-                        ui.position = {
-                            left: (event.clientX - click.x + original.left) / Wall.getScale(),
-                            top: (event.clientY - click.y + original.top) / Wall.getScale()
-                        };
-
-                        position = _.extend(position, ui.position);
-                        updateSection();
-                        scope.$apply();
-                    },
-                    stop: function stop(event, ui) {
-                        saveSection();
-                        scope.$apply();
-                        $timeout(function () {
-                            return $canvas.removeClass('dragged');
-                        }, 1);
-                    }
-                }).resizable({
-                    start: function start(event, ui) {
-                        $canvas.addClass('dragged');
-                    },
-                    resize: function resize(event, ui) {
-                        position.height = ui.size.height;
-                        position.width = ui.size.width;
-                        updateSection();
-                        scope.$apply();
-                    },
-                    stop: function stop(event, ui) {
-                        saveSection();
-                        $timeout(function () {
-                            return $canvas.removeClass('dragged');
-                        }, 1);
-                    }
-                }).droppable({
-                    accept: ".note",
-                    activeClass: "droppable",
-                    hoverClass: "dropping"
-                });
-
-                element.find('.section').removeClass('deleted');
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                removeSection: removeSection,
-                setColor: setColor,
-                getPosition: function getPosition() {
-                    return position;
-                },
-                getStyle: getStyle,
-                setText: setText,
-                updateText: updateText,
-                getText: function getText() {
-                    return text;
-                }
             });
         }
     };
@@ -1384,6 +1268,177 @@ app.directive('wallItem', function (State, $state, Wall, $timeout) {
     };
 });
 
+app.directive('sectionItem', function (State, $state, Wall, Dialog, $timeout) {
+    return {
+        templateUrl: 'section.html',
+        replace: true,
+        scope: {
+            id: '=',
+            wall: '=',
+            text: '=',
+            color: '=',
+            top: '=',
+            left: '=',
+            height: '=',
+            width: '='
+        },
+
+        link: function link(scope, element, attrs) {
+            var $canvas = $('.wall-canvas');
+
+            var position = { top: scope.top, left: scope.left, height: scope.height, width: scope.width };
+
+            var click = { x: 0, y: 0 };
+
+            var setText = function setText() {
+                saveSection();
+            };
+
+            var updateText = function updateText() {
+                updateSection();
+            };
+
+            var getStyle = function getStyle() {
+                return {
+                    'top': position.top,
+                    'left': position.left,
+                    'height': position.height,
+                    'width': position.width
+                };
+            };
+
+            var setColor = function setColor() {
+                Wall.changeColor(scope.color);
+                scope.color = Wall.getColor();
+                saveSection();
+            };
+
+            var getSection = function getSection() {
+                return {
+                    _id: scope.id,
+                    color: scope.color,
+                    height: position.height,
+                    width: position.width,
+                    top: position.top,
+                    left: position.left,
+                    text: scope.text,
+                    wall: scope.wall
+                };
+            };
+
+            var removeSection = function removeSection() {
+                console.log('removeSection', getSection());
+                element.find('.section').addClass('deleted');
+                socket.emit('remove-section', getSection());
+            };
+
+            var updateSection = function updateSection() {
+                socket.emit('update-section', getSection());
+            };
+
+            var saveSection = function saveSection() {
+                socket.emit('save-section', getSection());
+            };
+
+            var events = function events() {
+                socket.on('section-' + scope.id, function (data) {
+                    scope.color = data.color;
+                    position.top = data.top;
+                    position.left = data.left;
+                    position.height = data.height;
+                    position.width = data.width;
+                    scope.text = data.text;
+                    scope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+                element.find('.section').draggable({
+                    cancel: ".section-text, .section-title",
+                    start: function start(event, ui) {
+                        click.x = event.clientX;
+                        click.y = event.clientY;
+                        scope.$apply();
+                        $canvas.addClass('dragged');
+                    },
+                    drag: function drag(event, ui) {
+                        var original = ui.originalPosition;
+                        ui.position = {
+                            left: (event.clientX - click.x + original.left) / Wall.getScale(),
+                            top: (event.clientY - click.y + original.top) / Wall.getScale()
+                        };
+
+                        position = _.extend(position, ui.position);
+                        updateSection();
+                        scope.$apply();
+                    },
+                    stop: function stop(event, ui) {
+                        saveSection();
+                        scope.$apply();
+                        $timeout(function () {
+                            return $canvas.removeClass('dragged');
+                        }, 1);
+                    }
+                }).resizable({
+                    start: function start(event, ui) {
+                        $canvas.addClass('dragged');
+                    },
+                    resize: function resize(event, ui) {
+                        position.height = ui.size.height;
+                        position.width = ui.size.width;
+                        updateSection();
+                        scope.$apply();
+                    },
+                    stop: function stop(event, ui) {
+                        saveSection();
+                        $timeout(function () {
+                            return $canvas.removeClass('dragged');
+                        }, 1);
+                    }
+                }).droppable({
+                    accept: ".note",
+                    activeClass: "droppable",
+                    hoverClass: "dropping"
+                });
+
+                element.find('.section').removeClass('deleted');
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                removeSection: removeSection,
+                setColor: setColor,
+                getPosition: function getPosition() {
+                    return position;
+                },
+                getStyle: getStyle,
+                setText: setText,
+                updateText: updateText,
+                getText: function getText() {
+                    return text;
+                }
+            });
+        }
+    };
+});
+
+app.controller('HomeScreen', function ($element, $timeout, API, $scope) {
+
+    var content, tags, international, politics, religion, culture;
+
+    var init = function init() {
+        $timeout(function () {
+            return $element.find('[screen]').addClass('active');
+        }, 50);
+    };
+
+    init();
+
+    _.extend($scope, {});
+});
+
 app.directive('wallListItem', function (State, $state, Wall, User) {
     return {
         templateUrl: 'wall-list.html',
@@ -1437,21 +1492,6 @@ app.controller('BootcampScreen', function ($element, $timeout, API, $scope, $sta
             return $element.find('[screen]').addClass('active');
         }, 50);
         console.log('$state', $state);
-    };
-
-    init();
-
-    _.extend($scope, {});
-});
-
-app.controller('HomeScreen', function ($element, $timeout, API, $scope) {
-
-    var content, tags, international, politics, religion, culture;
-
-    var init = function init() {
-        $timeout(function () {
-            return $element.find('[screen]').addClass('active');
-        }, 50);
     };
 
     init();
