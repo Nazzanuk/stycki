@@ -41,6 +41,21 @@ socket.on('connect', function () {
 socket.on('disconnect', function () {
     return console.log('disconnected!');
 });
+app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
+
+    var init = function init() {
+        $timeout(function () {
+            return $element.find('[screen]').addClass('active');
+        }, 50);
+    };
+
+    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        $(document).scrollTop(0);
+    });
+
+    init();
+});
+
 app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
     var resolve = {
@@ -79,21 +94,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
     //$locationProvider.html5Mode(true);
 });
-app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
-
-    var init = function init() {
-        $timeout(function () {
-            return $element.find('[screen]').addClass('active');
-        }, 50);
-    };
-
-    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        $(document).scrollTop(0);
-    });
-
-    init();
-});
-
 'use strict';
 
 app.factory('Alert', function ($timeout, $rootScope) {
@@ -591,6 +591,36 @@ app.factory('Wall', function (State, $rootScope) {
     };
 });
 
+app.directive('dialogItem', function (State, $state, Wall, Dialog) {
+    return {
+        templateUrl: 'dialog.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var events = function events() {};
+
+            var init = function init() {
+                events();
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                getMessage: Dialog.getMessage,
+                getTitle: Dialog.getTitle,
+                submit: Dialog.submit,
+                isActive: Dialog.isActive,
+                getPlaceholder: Dialog.getPlaceholder,
+                content: Dialog.content,
+                closeDialog: Dialog.closeDialog,
+                newDialog: Dialog.newDialog
+            });
+        }
+    };
+});
+
 app.directive('headerItem', function (State, $state, User) {
     return {
         templateUrl: 'header.html',
@@ -629,36 +659,6 @@ app.directive('headerItem', function (State, $state, User) {
                 getTitle: State.getTitle,
                 showAvatars: State.showAvatars,
                 getUser: User.getUser
-            });
-        }
-    };
-});
-
-app.directive('dialogItem', function (State, $state, Wall, Dialog) {
-    return {
-        templateUrl: 'dialog.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var events = function events() {};
-
-            var init = function init() {
-                events();
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                getMessage: Dialog.getMessage,
-                getTitle: Dialog.getTitle,
-                submit: Dialog.submit,
-                isActive: Dialog.isActive,
-                getPlaceholder: Dialog.getPlaceholder,
-                content: Dialog.content,
-                closeDialog: Dialog.closeDialog,
-                newDialog: Dialog.newDialog
             });
         }
     };
@@ -1110,6 +1110,162 @@ app.directive('registerItem', function (State, $state, $timeout, User, $rootScop
     };
 });
 
+app.directive('sectionItem', function (State, $state, Wall, Dialog, $timeout) {
+    return {
+        templateUrl: 'section.html',
+        replace: true,
+        scope: {
+            id: '=',
+            wall: '=',
+            text: '=',
+            color: '=',
+            top: '=',
+            left: '=',
+            height: '=',
+            width: '='
+        },
+
+        link: function link(scope, element, attrs) {
+            var $canvas = $('.wall-canvas');
+
+            var position = { top: scope.top, left: scope.left, height: scope.height, width: scope.width };
+
+            var click = { x: 0, y: 0 };
+
+            var setText = function setText() {
+                saveSection();
+            };
+
+            var updateText = function updateText() {
+                updateSection();
+            };
+
+            var getStyle = function getStyle() {
+                return {
+                    'top': position.top,
+                    'left': position.left,
+                    'height': position.height,
+                    'width': position.width
+                };
+            };
+
+            var setColor = function setColor() {
+                Wall.changeColor(scope.color);
+                scope.color = Wall.getColor();
+                saveSection();
+            };
+
+            var getSection = function getSection() {
+                return {
+                    _id: scope.id,
+                    color: scope.color,
+                    height: position.height,
+                    width: position.width,
+                    top: position.top,
+                    left: position.left,
+                    text: scope.text,
+                    wall: scope.wall
+                };
+            };
+
+            var removeSection = function removeSection() {
+                console.log('removeSection', getSection());
+                element.find('.section').addClass('deleted');
+                socket.emit('remove-section', getSection());
+            };
+
+            var updateSection = function updateSection() {
+                socket.emit('update-section', getSection());
+            };
+
+            var saveSection = function saveSection() {
+                socket.emit('save-section', getSection());
+            };
+
+            var events = function events() {
+                socket.on('section-' + scope.id, function (data) {
+                    scope.color = data.color;
+                    position.top = data.top;
+                    position.left = data.left;
+                    position.height = data.height;
+                    position.width = data.width;
+                    scope.text = data.text;
+                    scope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+                element.find('.section').draggable({
+                    cancel: ".section-text, .section-title",
+                    start: function start(event, ui) {
+                        click.x = event.clientX;
+                        click.y = event.clientY;
+                        scope.$apply();
+                        $canvas.addClass('dragged');
+                    },
+                    drag: function drag(event, ui) {
+                        var original = ui.originalPosition;
+                        ui.position = {
+                            left: (event.clientX - click.x + original.left) / Wall.getScale(),
+                            top: (event.clientY - click.y + original.top) / Wall.getScale()
+                        };
+
+                        position = _.extend(position, ui.position);
+                        updateSection();
+                        scope.$apply();
+                    },
+                    stop: function stop(event, ui) {
+                        saveSection();
+                        scope.$apply();
+                        $timeout(function () {
+                            return $canvas.removeClass('dragged');
+                        }, 1);
+                    }
+                }).resizable({
+                    start: function start(event, ui) {
+                        $canvas.addClass('dragged');
+                    },
+                    resize: function resize(event, ui) {
+                        position.height = ui.size.height;
+                        position.width = ui.size.width;
+                        updateSection();
+                        scope.$apply();
+                    },
+                    stop: function stop(event, ui) {
+                        saveSection();
+                        $timeout(function () {
+                            return $canvas.removeClass('dragged');
+                        }, 1);
+                    }
+                }).droppable({
+                    accept: ".note",
+                    activeClass: "droppable",
+                    hoverClass: "dropping"
+                });
+
+                element.find('.section').removeClass('deleted');
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                removeSection: removeSection,
+                setColor: setColor,
+                getPosition: function getPosition() {
+                    return position;
+                },
+                getStyle: getStyle,
+                setText: setText,
+                updateText: updateText,
+                getText: function getText() {
+                    return text;
+                }
+            });
+        }
+    };
+});
+
 app.directive('settingsItem', function (State, $state, Wall, Dialog) {
     return {
         templateUrl: 'settings.html',
@@ -1268,177 +1424,6 @@ app.directive('wallItem', function (State, $state, Wall, $timeout) {
     };
 });
 
-app.directive('sectionItem', function (State, $state, Wall, Dialog, $timeout) {
-    return {
-        templateUrl: 'section.html',
-        replace: true,
-        scope: {
-            id: '=',
-            wall: '=',
-            text: '=',
-            color: '=',
-            top: '=',
-            left: '=',
-            height: '=',
-            width: '='
-        },
-
-        link: function link(scope, element, attrs) {
-            var $canvas = $('.wall-canvas');
-
-            var position = { top: scope.top, left: scope.left, height: scope.height, width: scope.width };
-
-            var click = { x: 0, y: 0 };
-
-            var setText = function setText() {
-                saveSection();
-            };
-
-            var updateText = function updateText() {
-                updateSection();
-            };
-
-            var getStyle = function getStyle() {
-                return {
-                    'top': position.top,
-                    'left': position.left,
-                    'height': position.height,
-                    'width': position.width
-                };
-            };
-
-            var setColor = function setColor() {
-                Wall.changeColor(scope.color);
-                scope.color = Wall.getColor();
-                saveSection();
-            };
-
-            var getSection = function getSection() {
-                return {
-                    _id: scope.id,
-                    color: scope.color,
-                    height: position.height,
-                    width: position.width,
-                    top: position.top,
-                    left: position.left,
-                    text: scope.text,
-                    wall: scope.wall
-                };
-            };
-
-            var removeSection = function removeSection() {
-                console.log('removeSection', getSection());
-                element.find('.section').addClass('deleted');
-                socket.emit('remove-section', getSection());
-            };
-
-            var updateSection = function updateSection() {
-                socket.emit('update-section', getSection());
-            };
-
-            var saveSection = function saveSection() {
-                socket.emit('save-section', getSection());
-            };
-
-            var events = function events() {
-                socket.on('section-' + scope.id, function (data) {
-                    scope.color = data.color;
-                    position.top = data.top;
-                    position.left = data.left;
-                    position.height = data.height;
-                    position.width = data.width;
-                    scope.text = data.text;
-                    scope.$apply();
-                });
-            };
-
-            var init = function init() {
-                events();
-                element.find('.section').draggable({
-                    cancel: ".section-text, .section-title",
-                    start: function start(event, ui) {
-                        click.x = event.clientX;
-                        click.y = event.clientY;
-                        scope.$apply();
-                        $canvas.addClass('dragged');
-                    },
-                    drag: function drag(event, ui) {
-                        var original = ui.originalPosition;
-                        ui.position = {
-                            left: (event.clientX - click.x + original.left) / Wall.getScale(),
-                            top: (event.clientY - click.y + original.top) / Wall.getScale()
-                        };
-
-                        position = _.extend(position, ui.position);
-                        updateSection();
-                        scope.$apply();
-                    },
-                    stop: function stop(event, ui) {
-                        saveSection();
-                        scope.$apply();
-                        $timeout(function () {
-                            return $canvas.removeClass('dragged');
-                        }, 1);
-                    }
-                }).resizable({
-                    start: function start(event, ui) {
-                        $canvas.addClass('dragged');
-                    },
-                    resize: function resize(event, ui) {
-                        position.height = ui.size.height;
-                        position.width = ui.size.width;
-                        updateSection();
-                        scope.$apply();
-                    },
-                    stop: function stop(event, ui) {
-                        saveSection();
-                        $timeout(function () {
-                            return $canvas.removeClass('dragged');
-                        }, 1);
-                    }
-                }).droppable({
-                    accept: ".note",
-                    activeClass: "droppable",
-                    hoverClass: "dropping"
-                });
-
-                element.find('.section').removeClass('deleted');
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                removeSection: removeSection,
-                setColor: setColor,
-                getPosition: function getPosition() {
-                    return position;
-                },
-                getStyle: getStyle,
-                setText: setText,
-                updateText: updateText,
-                getText: function getText() {
-                    return text;
-                }
-            });
-        }
-    };
-});
-
-app.controller('HomeScreen', function ($element, $timeout, API, $scope) {
-
-    var content, tags, international, politics, religion, culture;
-
-    var init = function init() {
-        $timeout(function () {
-            return $element.find('[screen]').addClass('active');
-        }, 50);
-    };
-
-    init();
-
-    _.extend($scope, {});
-});
-
 app.directive('wallListItem', function (State, $state, Wall, User) {
     return {
         templateUrl: 'wall-list.html',
@@ -1492,6 +1477,21 @@ app.controller('BootcampScreen', function ($element, $timeout, API, $scope, $sta
             return $element.find('[screen]').addClass('active');
         }, 50);
         console.log('$state', $state);
+    };
+
+    init();
+
+    _.extend($scope, {});
+});
+
+app.controller('HomeScreen', function ($element, $timeout, API, $scope) {
+
+    var content, tags, international, politics, religion, culture;
+
+    var init = function init() {
+        $timeout(function () {
+            return $element.find('[screen]').addClass('active');
+        }, 50);
     };
 
     init();
