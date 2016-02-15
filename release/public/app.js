@@ -79,21 +79,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
     //$locationProvider.html5Mode(true);
 });
-app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
-
-    var init = function init() {
-        $timeout(function () {
-            return $element.find('[screen]').addClass('active');
-        }, 50);
-    };
-
-    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        $(document).scrollTop(0);
-    });
-
-    init();
-});
-
 'use strict';
 
 app.factory('Alert', function ($timeout, $rootScope) {
@@ -591,6 +576,21 @@ app.factory('Wall', function (State, $rootScope) {
     };
 });
 
+app.controller('ScreenCtrl', function ($element, $timeout, State, $state) {
+
+    var init = function init() {
+        $timeout(function () {
+            return $element.find('[screen]').addClass('active');
+        }, 50);
+    };
+
+    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        $(document).scrollTop(0);
+    });
+
+    init();
+});
+
 app.directive('dialogItem', function (State, $state, Wall, Dialog) {
     return {
         templateUrl: 'dialog.html',
@@ -664,6 +664,87 @@ app.directive('headerItem', function (State, $state, User) {
     };
 });
 
+app.directive('loginItem', function (State, $state, $timeout, User, $rootScope) {
+    return {
+        templateUrl: 'login.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+            var _errorMessage = "";
+
+            var setGuest = function setGuest() {
+                User.setGuest();
+                $state.go('home');
+            };
+
+            var events = function events() {
+                socket.on('invalid-login', function () {
+                    console.log('invalid-login');
+                    _errorMessage = "The email and / or password is incorrect";
+                    $rootScope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+                scope.email = localStorage.getItem('email');
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                setGuest: setGuest,
+                checkUser: User.checkUser,
+                errorMessage: function errorMessage() {
+                    return _errorMessage;
+                },
+                clearError: function clearError() {
+                    return _errorMessage = "";
+                }
+            });
+        }
+    };
+});
+
+app.directive('profilePicItem', function (State, $state, User) {
+    return {
+        templateUrl: 'profile-pic.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var visible = true;
+
+            var avatars = [
+            //'/public/img/black-male.svg',
+            '/public/img/black-male-2.svg', '/public/img/black-male-3.svg', '/public/img/black-male-4.svg', '/public/img/asian-male.svg', '/public/img/white-male.svg', '/public/img/white-male-2.svg', '/public/img/white-male-3.svg', '/public/img/black-female.svg', '/public/img/asian-female.svg', '/public/img/asian-female-2.svg', '/public/img/white-female.svg', '/public/img/white-female-2.svg', '/public/img/white-female-3.svg', '/public/img/white-female-4.svg'];
+
+            var selectAvatar = function selectAvatar(img) {
+                User.updateUser({ img: img });
+            };
+
+            var events = function events() {};
+
+            var init = function init() {
+                events();
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                close: State.hideAvatars,
+                selectAvatar: selectAvatar,
+                getAvatars: function getAvatars() {
+                    return avatars;
+                },
+                isVisible: State.avatarsVisible
+            });
+        }
+    };
+});
+
 app.directive('menuItem', function (State, $state, User) {
     return {
         templateUrl: 'menu.html',
@@ -714,49 +795,6 @@ app.directive('menuItem', function (State, $state, User) {
                     return shrink;
                 },
                 logout: logout
-            });
-        }
-    };
-});
-
-app.directive('loginItem', function (State, $state, $timeout, User, $rootScope) {
-    return {
-        templateUrl: 'login.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-            var _errorMessage = "";
-
-            var setGuest = function setGuest() {
-                User.setGuest();
-                $state.go('home');
-            };
-
-            var events = function events() {
-                socket.on('invalid-login', function () {
-                    console.log('invalid-login');
-                    _errorMessage = "The email and / or password is incorrect";
-                    $rootScope.$apply();
-                });
-            };
-
-            var init = function init() {
-                events();
-                scope.email = localStorage.getItem('email');
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                setGuest: setGuest,
-                checkUser: User.checkUser,
-                errorMessage: function errorMessage() {
-                    return _errorMessage;
-                },
-                clearError: function clearError() {
-                    return _errorMessage = "";
-                }
             });
         }
     };
@@ -1009,44 +1047,6 @@ app.directive('noteItem', function (State, $state, Wall, Dialog, $timeout) {
                 getLink: function getLink() {
                     return link;
                 }
-            });
-        }
-    };
-});
-
-app.directive('profilePicItem', function (State, $state, User) {
-    return {
-        templateUrl: 'profile-pic.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var visible = true;
-
-            var avatars = [
-            //'/public/img/black-male.svg',
-            '/public/img/black-male-2.svg', '/public/img/black-male-3.svg', '/public/img/black-male-4.svg', '/public/img/asian-male.svg', '/public/img/white-male.svg', '/public/img/white-male-2.svg', '/public/img/white-male-3.svg', '/public/img/black-female.svg', '/public/img/asian-female.svg', '/public/img/asian-female-2.svg', '/public/img/white-female.svg', '/public/img/white-female-2.svg', '/public/img/white-female-3.svg', '/public/img/white-female-4.svg'];
-
-            var selectAvatar = function selectAvatar(img) {
-                User.updateUser({ img: img });
-            };
-
-            var events = function events() {};
-
-            var init = function init() {
-                events();
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                close: State.hideAvatars,
-                selectAvatar: selectAvatar,
-                getAvatars: function getAvatars() {
-                    return avatars;
-                },
-                isVisible: State.avatarsVisible
             });
         }
     };
@@ -1324,6 +1324,50 @@ app.directive('settingsItem', function (State, $state, Wall, Dialog) {
     };
 });
 
+app.directive('wallListItem', function (State, $state, Wall, User) {
+    return {
+        templateUrl: 'wall-list.html',
+        replace: true,
+        scope: {},
+
+        link: function link(scope, element, attrs) {
+
+            var walls = [];
+
+            var addWall = function addWall() {
+                socket.emit('add-wall', {
+                    _id: State.gen_id(),
+                    name: User.getUser().name.toLowerCase().replace(" ", "") + "s-wall-" + (walls.length + 1),
+                    owner: User.getUser()._id,
+                    users: [User.getUser()._id],
+                    'private': false
+                });
+            };
+
+            var events = function events() {
+                socket.on('wall-list', function (data) {
+                    walls = data;
+                    scope.$apply();
+                });
+            };
+
+            var init = function init() {
+                events();
+                socket.emit('get-walls', {});
+            };
+
+            init();
+
+            scope = _.extend(scope, {
+                getWalls: function getWalls() {
+                    return walls;
+                },
+                addWall: addWall
+            });
+        }
+    };
+});
+
 app.directive('wallItem', function (State, $state, Wall, $timeout) {
     return {
         templateUrl: 'wall.html',
@@ -1419,50 +1463,6 @@ app.directive('wallItem', function (State, $state, Wall, $timeout) {
                     return false;
                     if (event.currentTarget.className != event.target.className) return false;
                 }
-            });
-        }
-    };
-});
-
-app.directive('wallListItem', function (State, $state, Wall, User) {
-    return {
-        templateUrl: 'wall-list.html',
-        replace: true,
-        scope: {},
-
-        link: function link(scope, element, attrs) {
-
-            var walls = [];
-
-            var addWall = function addWall() {
-                socket.emit('add-wall', {
-                    _id: State.gen_id(),
-                    name: User.getUser().name.toLowerCase().replace(" ", "") + "s-wall-" + (walls.length + 1),
-                    owner: User.getUser()._id,
-                    users: [User.getUser()._id],
-                    'private': false
-                });
-            };
-
-            var events = function events() {
-                socket.on('wall-list', function (data) {
-                    walls = data;
-                    scope.$apply();
-                });
-            };
-
-            var init = function init() {
-                events();
-                socket.emit('get-walls', {});
-            };
-
-            init();
-
-            scope = _.extend(scope, {
-                getWalls: function getWalls() {
-                    return walls;
-                },
-                addWall: addWall
             });
         }
     };

@@ -46,13 +46,13 @@
     }
 
     .menu-items {
-      overflow-y: scroll;
+      overflow-y: auto;
       height: calc(100% - 80px);
       /* margin-bottom: 50px; */
       position: absolute;
       width: 170px;
 
-      width: 100%;
+      //width: 100%;
       overflow-x: hidden;
 
     }

@@ -91,6 +91,46 @@
         </div>
     </div>
 </script>
+<script type="text/ng-template" id="login.html">
+    <div template="login">
+        <div class="login">
+            <div class="login-title">Stycki</div>
+            <div class="login-box">
+                <!--<div class="login-header">Welcome</div>-->
+
+                <div class="login-label">Email</div>
+                <input class="login-input" ng-model="email" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})" autofocus/>
+
+                <div class="login-label">Password</div>
+                <input type="password" class="login-input" ng-model="password" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})"/>
+
+                <p ng-show="errorMessage()">{{errorMessage()}}</p>
+                <div class="login-hr" ng-show="errorMessage()"></div>
+                <p>Forgot your password?</p>
+                <div class="login-hr"></div>
+                <div class="butn" ng-click="checkUser({email:email, password:password})">Login &nbsp; <i class="fa fa-check"></i></div>
+                <div class="login-hr"></div>
+                <div class="login-butns">
+                    <div class="butn secondary" ui-sref="register">Create Account &nbsp; <i class="fa fa-user-plus"></i></div>
+                    <div class="butn secondary" ng-click="setGuest()">Guest &nbsp; <i class="fa fa-smile-o"></i></div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="profile-pic.html">
+    <div template="profile-pic">
+        <div class="profile-pic" ng-class="{active:isVisible()}" ng-click="close();">
+            <div class="profile-pic-box" ng-click="selectAvatar(avatar)" ng-repeat="avatar in getAvatars() track by $index">
+                <img ng-src="{{avatar}}" alt="">
+            </div>
+
+        </div>
+    </div>
+</script>
 <script type="text/ng-template" id="menu.html">
     <div template="menu">
         <div class="menu" ng-class="{'shrink': isShrunk()}">
@@ -146,36 +186,6 @@
             <div class="shrink-button" ng-click="shrinkMe()">
                 <i class="fa fa-chevron-left"></i>
             </div>
-        </div>
-    </div>
-</script>
-<script type="text/ng-template" id="login.html">
-    <div template="login">
-        <div class="login">
-            <div class="login-title">Stycki</div>
-            <div class="login-box">
-                <!--<div class="login-header">Welcome</div>-->
-
-                <div class="login-label">Email</div>
-                <input class="login-input" ng-model="email" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})" autofocus/>
-
-                <div class="login-label">Password</div>
-                <input type="password" class="login-input" ng-model="password" ng-change="clearError()" ng-enter="checkUser({email:email, password:password})"/>
-
-                <p ng-show="errorMessage()">{{errorMessage()}}</p>
-                <div class="login-hr" ng-show="errorMessage()"></div>
-                <p>Forgot your password?</p>
-                <div class="login-hr"></div>
-                <div class="butn" ng-click="checkUser({email:email, password:password})">Login &nbsp; <i class="fa fa-check"></i></div>
-                <div class="login-hr"></div>
-                <div class="login-butns">
-                    <div class="butn secondary" ui-sref="register">Create Account &nbsp; <i class="fa fa-user-plus"></i></div>
-                    <div class="butn secondary" ng-click="setGuest()">Guest &nbsp; <i class="fa fa-smile-o"></i></div>
-                </div>
-            </div>
-
-
-
         </div>
     </div>
 </script>
@@ -244,16 +254,6 @@
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="profile-pic.html">
-    <div template="profile-pic">
-        <div class="profile-pic" ng-class="{active:isVisible()}" ng-click="close();">
-            <div class="profile-pic-box" ng-click="selectAvatar(avatar)" ng-repeat="avatar in getAvatars() track by $index">
-                <img ng-src="{{avatar}}" alt="">
-            </div>
-
-        </div>
-    </div>
-</script>
 <script type="text/ng-template" id="register.html">
     <div template="register">
         <div class="register">
@@ -306,6 +306,29 @@
             <div class="settings-item" ng-click="removeWall()"><i class="fa fa-times fa-fw"></i> &nbsp; Remove Wall</div>
             <!--<div class="settings-item" ng-click="getWallName()">Change Name</div>-->
 
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="wall-list.html">
+    <div template="wall-list">
+        <div style="width:200px;">
+            <div class="butn primary-2" ng-click="addWall()"><i class="fa fa-plus"></i> &nbsp; Add Wall</div>
+        </div>
+
+        <div ng-if="getWalls().length == 0"><i class="fa fa-circle-o-notch fa-spin fa-2x"></i></div>
+        <div ng-if="getWalls().length != 0">
+
+            <h2>Public Walls</h2>
+
+            <div class="wall-list">
+                <div class="wall"
+                     ng-repeat="wall in getWalls() track by wall._id"
+                     ui-sref="wall({id:wall._id, name:wall.name})">
+                    #{{wall.name}}
+                </div>
+            </div>
+
+            <!--<h2 style="padding: 15px 0;">Private Walls</h2>-->
         </div>
     </div>
 </script>
@@ -363,29 +386,6 @@
             </div>
 
 
-        </div>
-    </div>
-</script>
-<script type="text/ng-template" id="wall-list.html">
-    <div template="wall-list">
-        <div style="width:200px;">
-            <div class="butn primary-2" ng-click="addWall()"><i class="fa fa-plus"></i> &nbsp; Add Wall</div>
-        </div>
-
-        <div ng-if="getWalls().length == 0"><i class="fa fa-circle-o-notch fa-spin fa-2x"></i></div>
-        <div ng-if="getWalls().length != 0">
-
-            <h2>Public Walls</h2>
-
-            <div class="wall-list">
-                <div class="wall"
-                     ng-repeat="wall in getWalls() track by wall._id"
-                     ui-sref="wall({id:wall._id, name:wall.name})">
-                    #{{wall.name}}
-                </div>
-            </div>
-
-            <!--<h2 style="padding: 15px 0;">Private Walls</h2>-->
         </div>
     </div>
 </script>
