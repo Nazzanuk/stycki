@@ -251,6 +251,70 @@ h1, h2 {
         -webkit-transform: rotate(5deg) scale(1.1);
                 transform: rotate(5deg) scale(1.1); }
 
+[template=menu] .menu {
+  -webkit-flex: 0 0 200px;
+      -ms-flex: 0 0 200px;
+          flex: 0 0 200px;
+  width: 200px;
+  position: relative;
+  z-index: 100000;
+  padding: 15px;
+  background: #eee;
+  transition: .2s;
+  overflow: hidden;
+  max-height: calc(100vh - 55px);
+  overflow-y: hidden; }
+  [template=menu] .menu .shrink-button {
+    position: absolute;
+    bottom: 15px;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: .2s; }
+    [template=menu] .menu .shrink-button .fa {
+      transition: .2s; }
+  [template=menu] .menu.shrink {
+    width: 40px;
+    -webkit-flex: 0 0 40px;
+        -ms-flex: 0 0 40px;
+            flex: 0 0 40px; }
+    [template=menu] .menu.shrink .shrink-button {
+      margin-left: -10px; }
+      [template=menu] .menu.shrink .shrink-button .fa {
+        -webkit-transform: rotate(180deg);
+                transform: rotate(180deg); }
+    [template=menu] .menu.shrink .menu-item, [template=menu] .menu.shrink .sub-menu-item {
+      opacity: 0; }
+  [template=menu] .menu .menu-items {
+    overflow-y: scroll;
+    height: calc(100% - 80px);
+    /* margin-bottom: 50px; */
+    position: absolute;
+    width: 170px;
+    width: 100%;
+    overflow-x: hidden; }
+  [template=menu] .menu .menu-item, [template=menu] .menu .sub-menu-item {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 15px;
+    color: #999;
+    cursor: pointer;
+    transition: .2s; }
+    [template=menu] .menu .menu-item:hover, [template=menu] .menu .sub-menu-item:hover {
+      color: #000; }
+    [template=menu] .menu .menu-item.active, [template=menu] .menu .active.sub-menu-item {
+      color: #000;
+      background: #c5d6f1;
+      background: radial-gradient(ellipse at center, #c5d6f1 50%, #b0c7ec 100%);
+      font-weight: 800;
+      background: #739cdd;
+      color: white; }
+  [template=menu] .menu .sub-menu-item {
+    margin-left: 15px; }
+    [template=menu] .menu .sub-menu-item.active {
+      background: #739cdd; }
+
 [template=login] {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -350,68 +414,6 @@ h1, h2 {
                 flex-direction: row; }
         [template=login] .login .login-box .login-butns .butn:first-child {
           margin-right: 15px; }
-
-[template=menu] .menu {
-  -webkit-flex: 0 0 200px;
-      -ms-flex: 0 0 200px;
-          flex: 0 0 200px;
-  width: 200px;
-  position: relative;
-  z-index: 100000;
-  padding: 15px;
-  background: #eee;
-  transition: .2s;
-  overflow: hidden;
-  max-height: calc(100vh - 55px);
-  overflow-y: hidden; }
-  [template=menu] .menu .shrink-button {
-    position: absolute;
-    bottom: 15px;
-    height: 30px;
-    width: 30px;
-    text-align: center;
-    cursor: pointer;
-    transition: .2s; }
-    [template=menu] .menu .shrink-button .fa {
-      transition: .2s; }
-  [template=menu] .menu.shrink {
-    width: 40px;
-    -webkit-flex: 0 0 40px;
-        -ms-flex: 0 0 40px;
-            flex: 0 0 40px; }
-    [template=menu] .menu.shrink .shrink-button {
-      margin-left: -10px; }
-      [template=menu] .menu.shrink .shrink-button .fa {
-        -webkit-transform: rotate(180deg);
-                transform: rotate(180deg); }
-    [template=menu] .menu.shrink .menu-item, [template=menu] .menu.shrink .sub-menu-item {
-      opacity: 0; }
-  [template=menu] .menu .menu-items {
-    overflow-y: scroll;
-    height: calc(100% - 80px);
-    /* margin-bottom: 50px; */
-    position: absolute;
-    width: 170px; }
-  [template=menu] .menu .menu-item, [template=menu] .menu .sub-menu-item {
-    height: 40px;
-    line-height: 40px;
-    padding: 0 15px;
-    color: #999;
-    cursor: pointer;
-    transition: .2s; }
-    [template=menu] .menu .menu-item:hover, [template=menu] .menu .sub-menu-item:hover {
-      color: #000; }
-    [template=menu] .menu .menu-item.active, [template=menu] .menu .active.sub-menu-item {
-      color: #000;
-      background: #c5d6f1;
-      background: radial-gradient(ellipse at center, #c5d6f1 50%, #b0c7ec 100%);
-      font-weight: 800;
-      background: #739cdd;
-      color: white; }
-  [template=menu] .menu .sub-menu-item {
-    margin-left: 15px; }
-    [template=menu] .menu .sub-menu-item.active {
-      background: #739cdd; }
 
 [template=note] .note {
   color: #000;
@@ -693,8 +695,8 @@ h1, h2 {
         -ms-flex-direction: column;
             flex-direction: column;
     overflow: hidden;
-    width: 15%;
-    min-width: 100px;
+    width: 150px;
+    height: 150px;
     margin: 15px;
     border-radius: 300px;
     position: relative;
